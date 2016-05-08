@@ -8,7 +8,8 @@ public enum InteractableBehaviour
 {
     None,
     WalkToLocation,
-    WalkToClick
+    WalkToClick,
+    WalkThenDo
 }
 
 public class Interactable : MonoBehaviour
@@ -39,8 +40,18 @@ public class Interactable : MonoBehaviour
     /// Returns the place that the player should walk to.
     /// </summary>
     /// <returns></returns>
-    public float GetGotoLocation()
+    public float GetWalkToLocation()
     {
         return transform.position.x + m_LocationOffset;
+    }
+
+    public virtual void OnClicked()
+    {
+        Debug.Log( gameObject.name + " clicked." );
+    }
+
+    public virtual void ThenDo()
+    {
+        Debug.Log( "Nothing to do." );
     }
 }

@@ -1,6 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Shows what the player is currently doing.
+/// </summary>
+public enum PlayerState
+{
+    Ready,
+    Walking,
+    Interacting
+}
+
 public class Player : MonoBehaviour
 {
     /// <summary>
@@ -9,9 +19,18 @@ public class Player : MonoBehaviour
     public GameObject m_ClickedOnItem;
 
     /// <summary>
-    /// What I am interacting with.
+    /// This is my instance.
     /// </summary>
-    public GameObject m_InteractingObject;
+    static Player m_Instance;
+
+    /// <summary>
+    /// Returns my instance.
+    /// </summary>
+    /// <returns>Me</returns>
+    static public Player GetInstance()
+    {
+        return m_Instance;
+    }
 
     /// <summary>
     /// How fast the player walks.
@@ -24,30 +43,39 @@ public class Player : MonoBehaviour
     float m_TargetXPosition;
 
     /// <summary>
-    /// If the player is currently moving.
+    /// My Current state.
     /// </summary>
-    bool m_Moving;
-    
+    PlayerState m_State;
+
     /// <summary>
-    /// Returns if the player is moving.
+    /// Returns my current state.
     /// </summary>
     /// <returns></returns>
-    public bool IsMoving()
+    public PlayerState GetState() { return m_State; }
+
+    /// <summary>
+    /// Sets my current state.
+    /// </summary>
+    /// <param name="state">My new state</param>
+    public void SetState( PlayerState state ) { m_State = state; }
+
+
+    void Start()
     {
-        return m_Moving;
+        m_Instance = this;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if( m_Moving )
+        if( m_State == PlayerState.Walking )
         {
             Vector3 position = transform.position;
 
             if( Mathf.Abs( m_TargetXPosition - position.x ) < 0.1f )
             {
                 position.x = m_TargetXPosition;
-                m_Moving = false;
+                m_State = PlayerState.Ready;
             }
             else
             {
@@ -68,11 +96,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        m_InteractingObject = null;
-    }
 
-    void LateUpdate()
-    {
     }
 
 
@@ -80,11 +104,11 @@ public class Player : MonoBehaviour
     /// Moves the player to a location.
     /// </summary>
     /// <param name="xPosition">The position to move to.</param>
-    public void GotoLocation( float xPosition )
+    public void WalkToLocation( float xPosition )
     {
         m_TargetXPosition = xPosition;
 
-        m_Moving = true;
+        m_State = PlayerState.Walking;
     }
 
     /// <summary>
@@ -93,18 +117,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public void SetPosition( float position )
     {
-        m_Moving = false;
+        m_State = PlayerState.Ready;
         transform.position.Set( position, transform.position.y, transform.position.z );
-    }
-
-    /// <summary>
-    /// Called when the player finishes moving.
-    /// </summary>
-    private void OnFinishedMoving()
-    {
-        if( m_ClickedOnItem != null )
-        {
-            Debug.Log( "Ready to interact with " + m_ClickedOnItem.name );
-        }
     }
 }

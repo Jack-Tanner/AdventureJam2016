@@ -1,32 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CarriageDoor : MonoBehaviour
+public class CarriageDoor : Interactable
 {
+    public Transform    m_OwningTrain;
+    public CarriageDoor m_TransitionToDoor;
 
-    // Use this for initialization
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void OnTriggerStay2D( Collider2D other )
-    {
-        Player player = other.gameObject.GetComponent<Player>();
-        if( player != null )
+        if( m_OwningTrain == null )
         {
-            // We should have a interactable script on us.
-            Interactable myInteractable = gameObject.GetComponent<Interactable>();
-            if( myInteractable != null )
-            {
-                player.SetPosition( myInteractable.GetGotoLocation() );
-            }
+            Debug.LogError( "No owning train set on " + name );
+        }
+
+        if( m_TransitionToDoor == null )
+        {
+            Debug.LogError( "No transition to door set on " + name );
+        }
+    }
+
+    public override void ThenDo()
+    {
+        if( m_TransitionToDoor != null )
+        {
+            Player.GetInstance().transform.parent = m_OwningTrain.transform;
+            Player.GetInstance().WalkToLocation( m_TransitionToDoor.GetWalkToLocation() );
+
+            CameraController.GetInstance().MoveToPosition( m_TransitionToDoor.m_OwningTrain.transform.position );
         }
     }
 }
