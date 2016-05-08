@@ -21,7 +21,12 @@ public class CarriageDoor : MonoBehaviour
         Player player = other.gameObject.GetComponent<Player>();
         if( player != null )
         {
-            player.SetLastPosition();
+            // We should have a interactable script on us.
+            Interactable myInteractable = gameObject.GetComponent<Interactable>();
+            if( myInteractable != null )
+            {
+                player.SetPosition( myInteractable.GetGotoLocation() );
+            }
         }
     }
 }

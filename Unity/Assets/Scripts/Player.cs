@@ -19,11 +19,6 @@ public class Player : MonoBehaviour
     public float m_WalkSpeed = 10.0f;
 
     /// <summary>
-    /// The position the I was at in the last frame.
-    /// </summary>
-    public float m_LastPosition = 0.0f;
-
-    /// <summary>
     /// Where the player is walking to.
     /// </summary>
     float m_TargetXPosition;
@@ -32,11 +27,14 @@ public class Player : MonoBehaviour
     /// If the player is currently moving.
     /// </summary>
     bool m_Moving;
-
-    // Use this for initialization
-    void Start()
+    
+    /// <summary>
+    /// Returns if the player is moving.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsMoving()
     {
-
+        return m_Moving;
     }
 
     // Update is called once per frame
@@ -71,7 +69,6 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         m_InteractingObject = null;
-        m_LastPosition = transform.position.x;
     }
 
     void LateUpdate()
@@ -94,10 +91,10 @@ public class Player : MonoBehaviour
     /// Moves the player to the last safe position and stops it
     /// from moving.
     /// </summary>
-    public void SetLastPosition()
+    public void SetPosition( float position )
     {
         m_Moving = false;
-        transform.position.Set( m_LastPosition, transform.position.y, transform.position.z );
+        transform.position.Set( position, transform.position.y, transform.position.z );
     }
 
     /// <summary>
