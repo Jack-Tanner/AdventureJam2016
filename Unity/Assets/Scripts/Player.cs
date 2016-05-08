@@ -6,12 +6,22 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Is only populated when the player clicks on something it can interact with.
     /// </summary>
-    public MonoBehaviour m_ClickedOnItem;
+    public GameObject m_ClickedOnItem;
+
+    /// <summary>
+    /// What I am interacting with.
+    /// </summary>
+    public GameObject m_InteractingObject;
 
     /// <summary>
     /// How fast the player walks.
     /// </summary>
     public float m_WalkSpeed = 10.0f;
+
+    /// <summary>
+    /// The position the I was at in the last frame.
+    /// </summary>
+    public float m_LastPosition = 0.0f;
 
     /// <summary>
     /// Where the player is walking to.
@@ -57,6 +67,18 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    void FixedUpdate()
+    {
+        m_InteractingObject = null;
+    }
+
+    void LateUpdate()
+    {
+        m_LastPosition = transform.position.x;
+    }
+
+
     /// <summary>
     /// Moves the player to a location.
     /// </summary>
@@ -66,6 +88,16 @@ public class Player : MonoBehaviour
         m_TargetXPosition = xPosition;
 
         m_Moving = true;
+    }
+
+    /// <summary>
+    /// Moves the player to the last safe position and stops it
+    /// from moving.
+    /// </summary>
+    public void SetLastPosition()
+    {
+        m_Moving = false;
+        transform.position.Set( m_LastPosition, transform.position.y, transform.position.z );
     }
 
     /// <summary>
