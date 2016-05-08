@@ -21,7 +21,34 @@ public class InteractionMonitor : MonoBehaviour
             // Find where the player clicked in the world.
             Vector3 worldClickPosition = Camera.main.ScreenToWorldPoint( Input.mousePosition );
             Debug.Log( "Clicked at " + worldClickPosition.x );
-            m_Player.GotoLocation( worldClickPosition.x );
+            //m_Player.GotoLocation( worldClickPosition.x );
+            RaycastHit2D hit = Physics2D.Raycast( worldClickPosition, Vector2.zero );
+
+            if( hit.collider != null )
+            {
+                Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
+                if( interactable != null )
+                {
+                    switch( interactable.m_OnClickedBehaviour )
+                    {
+                        case InteractableBehaviour.None:
+                            // Intentionally empty.
+                            break;
+
+                        case InteractableBehaviour.WalkToLocation:
+                            m_Player.GotoLocation( interactable.GetGotoLocation() );
+                            break;
+
+                        case InteractableBehaviour.WalkToClick:
+                            m_Player.GotoLocation( worldClickPosition.x );
+                            break;
+
+                        default:
+                            Debug.Log( "Unimplemented interactable behaviour" );
+                            break;
+                    }
+                }
+            }
         }
     }
 }

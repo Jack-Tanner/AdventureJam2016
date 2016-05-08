@@ -71,11 +71,11 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         m_InteractingObject = null;
+        m_LastPosition = transform.position.x;
     }
 
     void LateUpdate()
     {
-        m_LastPosition = transform.position.x;
     }
 
 
