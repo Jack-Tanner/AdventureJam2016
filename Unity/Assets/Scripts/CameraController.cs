@@ -33,7 +33,6 @@ public class CameraController : MonoBehaviour
             else
             {
                 Vector3 position = Vector3.Lerp( transform.position, m_MoveToLocation, delta );
-                Debug.Log( position.x );
                 transform.position = position;
             }
         }
