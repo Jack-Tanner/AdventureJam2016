@@ -6,25 +6,48 @@ using System.Collections;
 public class InteractionMonitor : MonoBehaviour
 {
     public Player m_Player;
-    
+
     Interactable m_CurrentInteractable = null;
+    GameObject m_CurrentHighlight = null;
+    Vector3     m_HighlightScale;
+
     bool m_ThenDoCalled = false;
 
     // Update is called once per frame
     void Update()
     {
-        if( Input.GetMouseButtonUp( 0 ) && m_CurrentInteractable == null )
+        // Find where the player clicked in the world.
+        Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint( Input.mousePosition );
+
+        RaycastHit2D hit = Physics2D.Raycast( worldMousePosition, Vector2.zero );
+
+        if( hit.collider != null )
         {
-            // Find where the player clicked in the world.
-            Vector3 worldClickPosition = Camera.main.ScreenToWorldPoint( Input.mousePosition );
+            Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
 
-            RaycastHit2D hit = Physics2D.Raycast( worldClickPosition, Vector2.zero );
-
-            if( hit.collider != null )
+            if( interactable != null )
             {
-                Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
+                // Highlight mechanism.
+                if( m_CurrentHighlight != interactable.gameObject )
+                {
+                    // We we were just highlighing an object then shrink it.
+                    if( m_CurrentHighlight != null )
+                    {
+                        m_CurrentHighlight.transform.localScale = m_HighlightScale;
+                    }
 
-                if( interactable != null  )
+                    m_CurrentHighlight = interactable.gameObject;
+                    m_HighlightScale = m_CurrentHighlight.transform.localScale;
+
+                    if( interactable.Highlightable() )
+                    {
+                        m_CurrentHighlight.transform.localScale = m_HighlightScale * 1.2f;
+                    }
+                }
+
+
+                // Clicking mechanism.
+                if( Input.GetMouseButtonUp( 0 ) && m_CurrentInteractable == null )
                 {
                     m_CurrentInteractable = interactable;
                     m_CurrentInteractable.OnClicked();
@@ -40,11 +63,14 @@ public class InteractionMonitor : MonoBehaviour
                             break;
 
                         case InteractableBehaviour.WalkToClick:
-                            m_Player.WalkToLocation( worldClickPosition.x );
+                            m_Player.WalkToLocation( worldMousePosition.x );
                             break;
 
-
                         case InteractableBehaviour.WalkThenDo:
+                            m_Player.WalkToLocation( interactable.GetWalkToLocation() );
+                            break;
+
+                        case InteractableBehaviour.WalkThenTalk:
                             m_Player.WalkToLocation( interactable.GetWalkToLocation() );
                             break;
 
@@ -62,6 +88,7 @@ public class InteractionMonitor : MonoBehaviour
             switch( m_CurrentInteractable.m_OnClickedBehaviour )
             {
                 case InteractableBehaviour.WalkThenDo:
+                case InteractableBehaviour.WalkThenTalk:
 
                     // Check to see if this interactable has had it's ThenDo called.
                     if( m_ThenDoCalled == false )

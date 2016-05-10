@@ -9,7 +9,8 @@ public enum InteractableBehaviour
     None,
     WalkToLocation,
     WalkToClick,
-    WalkThenDo
+    WalkThenDo,
+    WalkThenTalk,
 }
 
 public class Interactable : MonoBehaviour
@@ -26,13 +27,18 @@ public class Interactable : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if( m_OnClickedBehaviour == InteractableBehaviour.WalkToLocation )
+        switch( m_OnClickedBehaviour )
         {
-            Vector3 position = transform.position;
-            position.x += m_LocationOffset;
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine( transform.position, position );
-            Gizmos.DrawSphere( position, 0.2f );
+            case InteractableBehaviour.WalkThenTalk:
+            case InteractableBehaviour.WalkToLocation:
+                {
+                    Vector3 position = transform.position;
+                    position.x += m_LocationOffset;
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawLine( transform.position, position );
+                    Gizmos.DrawSphere( position, 0.2f );
+                }
+                break;
         }
     }
 
@@ -53,5 +59,10 @@ public class Interactable : MonoBehaviour
     public virtual void ThenDo()
     {
         Debug.Log( "Nothing to do." );
+    }
+
+    public virtual bool Highlightable()
+    {
+        return false;
     }
 }

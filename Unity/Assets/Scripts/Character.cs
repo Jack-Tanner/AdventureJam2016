@@ -3,8 +3,8 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-public class Character : MonoBehaviour {
-
+public class Character : MonoBehaviour
+{
     [System.Serializable]
     public class CharacterStateData
     {

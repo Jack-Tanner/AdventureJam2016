@@ -29,4 +29,9 @@ public class CarriageDoor : Interactable
             CameraController.GetInstance().MoveToPosition( m_TransitionToDoor.m_OwningTrain.transform.position );
         }
     }
+
+    public override bool Highlightable()
+    {
+        return true;
+    }
 }
