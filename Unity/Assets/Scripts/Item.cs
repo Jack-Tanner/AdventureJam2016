@@ -35,7 +35,9 @@ public class Item : Interactable
     public override void ThenDo()
     {
         // Just add it to the inventory for now.
-        Pickup();
+        //Pickup();
+        Character m_Character = GetComponent<Character>();
+        m_Character.InteractWithNPC();
     }
 
     /// <summary>

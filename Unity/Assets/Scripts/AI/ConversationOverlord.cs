@@ -75,11 +75,17 @@ public class ConversationOverlord : MonoBehaviour {
         }
         else
         {
+            bool autoTick = current_conversation.m_CurrentConversationNode.m_bIsSilent;
             m_bDoneTalking = current_conversation.DoSpeech();
             m_textBox.gameObject.SetActive(true);
             if (m_bDoneTalking)
             {
                 current_conversation = null;
+            }
+
+            if (autoTick)
+            {
+                TickConversation();
             }
         }
     }
