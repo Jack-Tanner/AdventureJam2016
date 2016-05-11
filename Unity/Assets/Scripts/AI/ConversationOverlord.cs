@@ -44,21 +44,43 @@ public class ConversationOverlord : MonoBehaviour {
         }
     }
 
+    public void Update()
+    {
+        if(Input.GetMouseButtonUp(0))
+        {
+            TickConversation();
+        }
+    }
+
     public void SelectOption(int index)
     {
         current_conversation.SelectOption(index);
         m_optionsGo.SetActive(false);
     }
 
+
+    private bool m_bDoneTalking = false;
+
     public void TickConversation()
     {
+        if (m_bDoneTalking)
+        {
+            m_textBox.gameObject.SetActive(false);
+            m_bDoneTalking = false;
+        }
+
         if (current_conversation == null)
         {
             Debug.Log("Not in conversation");
         }
         else
         {
-            current_conversation.DoSpeech();
+            m_bDoneTalking = current_conversation.DoSpeech();
+            m_textBox.gameObject.SetActive(true);
+            if (m_bDoneTalking)
+            {
+                current_conversation = null;
+            }
         }
     }
 

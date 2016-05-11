@@ -5,56 +5,37 @@ using UnityEngine.UI;
 
 public class Character : MonoBehaviour
 {
-    [System.Serializable]
-    public class CharacterStateData
-    {
-        public string[] dialogue;
-        public int dialoguePos;
-        public string ItemOfInterest;
-    }
-    public Text m_Text;
-    public GameObject m_SpeechCanvas;
-    public CharacterStateData[] m_CharacterStateData;
-    public int m_CurrentState = 0;
+    public GameObject Conversations;
 
-    //Returns true when there was speech, false when finished
-    public bool SpeakToNPC()
+    public void InteractWithNPC()
     {
-        CharacterStateData stateData = m_CharacterStateData[m_CurrentState];
-        if (stateData.dialoguePos >= stateData.dialogue.Length)
+        ConversationManager cM = null;
+        bool hadSomethingToSay = false;
+        int count = Conversations.transform.childCount;
+        for (int i = 0; i < count; ++i)
         {
-            stateData.dialoguePos = 0;
-            m_Text.text = "";
-            m_SpeechCanvas.SetActive(false);
-            return false;
-        }
-      
-        string speech = stateData.dialogue[stateData.dialoguePos];
-        stateData.dialoguePos++;
-        m_Text.text = speech;
-        m_SpeechCanvas.SetActive(true);
-        return true;
-    }
+            cM = Conversations.transform.GetChild(i).GetComponent<ConversationManager>();
+            if (cM == null)
+                continue;
 
-    public void GiveItem(string item)
-    {
-        if(item == m_CharacterStateData[m_CurrentState].ItemOfInterest)
-        {
-            MoveToNextState();
+            hadSomethingToSay = cM.HaveSomethingToSay(gameObject);
+
+            if (hadSomethingToSay)
+            {
+                break;
+            }
         }
 
+        if ((hadSomethingToSay == false) || cM == null)
+        {
+            Debug.Log("I have nothing to say right now");
+        }
+        else
+        {
+            ConversationOverlord.GetInstance().current_conversation = cM;
+            ConversationOverlord.GetInstance().TickConversation();
+        }
     }
-
-    public string GetItemOfInterest()
-    {
-        return m_CharacterStateData[m_CurrentState].ItemOfInterest;
-    }
-
-    private void MoveToNextState()
-    {
-        m_CurrentState++;
-    }
-
 
 
 

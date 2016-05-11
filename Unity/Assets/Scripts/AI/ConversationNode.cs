@@ -9,8 +9,11 @@ public class ConversationNode : MonoBehaviour {
     public string m_requiresObject;
 
     public string m_sSpeech;
+    public bool m_bIsSilent = false;
 
-    public string m_sGiveItem;
+
+    public Item m_sGiveItem;
+    public string m_sObjective;
 
     public ConversationNode GetNext()
     {

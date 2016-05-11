@@ -12,27 +12,33 @@ public class ConversationManager : MonoBehaviour {
         //Check for speech
         string item = m_CurrentConversationNode.m_requiresObject;
         if (    m_CurrentConversationNode.m_Speaker == npc &&
-           (    string.IsNullOrEmpty(item)
-                || true) ) //Player.GetInstance().HasItem(item)))
-            {
+           (    string.IsNullOrEmpty(item) || Inventory.GetInstance().HasItem(item)))
+        {
             return true;
         }
         return false;
     }
 
-    public void DoSpeech()
+    public bool DoSpeech()
     {
         if (m_CurrentConversationNode.isBranchNode())
         {
             ShowOptions();
-            return;
+            return false;
         }
         else
-        { 
-            SaySpeech(m_CurrentConversationNode);
-            if(string.IsNullOrEmpty(m_CurrentConversationNode.m_sGiveItem) == false)
+        {
+            if (m_CurrentConversationNode.m_bIsSilent == false)
             {
-                Debug.Log("Give player item" + m_CurrentConversationNode.m_sGiveItem);
+                SaySpeech(m_CurrentConversationNode);
+            }
+            if((m_CurrentConversationNode.m_sGiveItem) != null)
+            {
+                Inventory.GetInstance().PickupItem(m_CurrentConversationNode.m_sGiveItem);
+            }
+            if(string.IsNullOrEmpty(m_CurrentConversationNode.m_sObjective) == false)
+            {
+                Inventory.GetInstance().GiveInfoItem(m_CurrentConversationNode.m_sObjective);
             }
         }
 
@@ -57,16 +63,19 @@ public class ConversationManager : MonoBehaviour {
                     foundCheckpoint = m_CurrentConversationNode.m_bConvCheckpoint;
                 }
             }
+
+            return true;
         }
         else
         {
             m_CurrentConversationNode = newNode;
         }
+        return false;
     }
 
     public void SaySpeech(ConversationNode c)
     {
-        ConversationOverlord.GetInstance().SendText(c.m_Speaker + " : " + c.m_sSpeech);
+        ConversationOverlord.GetInstance().SendText(c.m_Speaker.name + " : " + c.m_sSpeech);
     }
 
     public void ShowOptions()

@@ -17,7 +17,7 @@ public class CharacterInteraction : Interactable
 
     public override void ThenDo()
     {
-        m_Character.SpeakToNPC();
+        m_Character.InteractWithNPC();
     }
 
     public override bool Highlightable()

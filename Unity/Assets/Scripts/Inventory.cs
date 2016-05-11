@@ -70,12 +70,13 @@ public class Inventory : MonoBehaviour
     /// added as an info item.
     /// </summary>
     /// <param name="itemName"></param>
-    public void GiveInfoItem( string itemName )
+    public void GiveInfoItem(string itemName)
     {
-        Item newItem = new Item();
+        GameObject newItemObject = new GameObject();
+        Item newItem = newItemObject.AddComponent<Item>();
         newItem.m_ItemName = itemName;
         newItem.m_VisibleInInventory = false;
-        PickupItem( newItem );
+        PickupItem(newItem);
     }
 
     /// <summary>
@@ -89,7 +90,7 @@ public class Inventory : MonoBehaviour
         int count = m_PlayersItems.Count;
         for( int i = 0; i < count; ++i )
         {
-            if( m_PlayersItems[i].name == itemName )
+            if( m_PlayersItems[i].m_ItemName == itemName )
             {
                 return true;
             }
