@@ -72,20 +72,26 @@ public class Inventory : MonoBehaviour
     {
         Image[] UIItems = gameObject.GetComponentsInChildren<Image>( true );
         int index = 0;
-        for( int i = 0; i < UIItems.Length; ++i )
+        int visibleItemCount = GetVisibleItemCount();
+        int uiitemcount = UIItems.Length;
+        for( int i = 0; i < uiitemcount; ++i )
         {
-            if( UIItems[i].gameObject != gameObject )
+            Image currentItem = UIItems[i];
+            if( currentItem != null && currentItem.gameObject != gameObject )
             {
-                Image currentItem = UIItems[i];
-                if( index < m_PlayersItems.Count )
+                if( index < visibleItemCount )
                 {
-                    currentItem.gameObject.SetActive( true );
-                    if( currentItem != null )
+                    Item playersItem = GetVisibleItemByIndex( index );
+                    if( playersItem != null )
                     {
-                        SpriteRenderer sr = m_PlayersItems[index].GetComponent<SpriteRenderer>();
-                        if( sr != null )
+                        currentItem.gameObject.SetActive( true );
+                        if( currentItem != null )
                         {
-                            currentItem.sprite = sr.sprite;
+                            SpriteRenderer sr = playersItem.GetComponent<SpriteRenderer>();
+                            if( sr != null )
+                            {
+                                currentItem.sprite = sr.sprite;
+                            }
                         }
                     }
                 }
@@ -97,5 +103,50 @@ public class Inventory : MonoBehaviour
                 ++index;
             }
         }
+    }
+
+    /// <summary>
+    /// Returns a visible item by index as if there were no hidden items.
+    /// </summary>
+    /// <param name="index">index to get at</param>
+    /// <returns>A valid item, or null if out of range index.</returns>
+    private Item GetVisibleItemByIndex( int index )
+    {
+        int count = m_PlayersItems.Count;
+        int visibleCount = 0;
+        for( int i = 0; i < count; ++i )
+        {
+            if( m_PlayersItems[i].IsVisibleItem() == true )
+            {
+                if( index == visibleCount )
+                {
+                    return m_PlayersItems[i];
+                }
+
+                ++visibleCount;
+            }
+        }
+
+        // unable to find this item.
+        return null;
+    }
+
+    /// <summary>
+    /// Returns the number of visible items.
+    /// </summary>
+    /// <returns>Visible item count.</returns>
+    private int GetVisibleItemCount()
+    {
+        int count = m_PlayersItems.Count;
+        int number = 0;
+        for( int i = 0; i < count;  ++i )
+        {
+            if( m_PlayersItems[i].IsVisibleItem() )
+            {
+                ++number;
+            }
+        }
+
+        return number;
     }
 }

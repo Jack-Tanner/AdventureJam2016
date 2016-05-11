@@ -11,7 +11,13 @@ public class Item : Interactable
     /// <summary>
     /// If true then this item will be shown in the inventory. Set to false for information items.
     /// </summary>
-    public bool m_VisibleInInventory;
+    public bool m_VisibleInInventory = true;
+
+    /// <summary>
+    /// Accessor to item visiblility.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsVisibleItem() { return m_VisibleInInventory; }
 
     /// <summary>
     /// Called when the player clicks on the item and pics it up.

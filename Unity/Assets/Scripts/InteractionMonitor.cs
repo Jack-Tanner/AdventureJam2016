@@ -81,6 +81,15 @@ public class InteractionMonitor : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            // Release the interacting object.
+            if( m_CurrentHighlight != null )
+            {
+                m_CurrentHighlight.transform.localScale = m_HighlightScale;
+                m_CurrentHighlight = null;
+            }
+        }
 
         // Wait for the player to move to the new object.
         if( m_CurrentInteractable != null && m_Player.GetState() == PlayerState.Ready )
