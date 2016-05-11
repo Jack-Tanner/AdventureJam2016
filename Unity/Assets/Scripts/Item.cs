@@ -9,6 +9,11 @@ public class Item : Interactable
     public string m_ItemName;
 
     /// <summary>
+    /// If true then this item will be shown in the inventory. Set to false for information items.
+    /// </summary>
+    public bool m_VisibleInInventory;
+
+    /// <summary>
     /// Called when the player clicks on the item and pics it up.
     /// </summary>
     public void Pickup()
@@ -25,5 +30,14 @@ public class Item : Interactable
     {
         // Just add it to the inventory for now.
         Pickup();
+    }
+
+    /// <summary>
+    /// We want to show that the player can click on an item when it's in the world
+    /// </summary>
+    /// <returns></returns>
+    public override bool Highlightable()
+    {
+        return true;
     }
 }
