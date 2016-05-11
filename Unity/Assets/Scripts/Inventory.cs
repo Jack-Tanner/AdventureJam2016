@@ -66,6 +66,39 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
+    /// Pass in the name of the item you want to create, it will be
+    /// added as an info item.
+    /// </summary>
+    /// <param name="itemName"></param>
+    public void GiveInfoItem( string itemName )
+    {
+        Item newItem = new Item();
+        newItem.m_ItemName = itemName;
+        newItem.m_VisibleInInventory = false;
+        PickupItem( newItem );
+    }
+
+    /// <summary>
+    /// Returns true if the player has the item name passed in in their inventory.
+    /// Includes InfoItems.
+    /// </summary>
+    /// <param name="itemName"></param>
+    /// <returns></returns>
+    public bool HasItem( string itemName )
+    {
+        int count = m_PlayersItems.Count;
+        for( int i = 0; i < count; ++i )
+        {
+            if( m_PlayersItems[i].name == itemName )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Arranges the UI items.
     /// </summary>
     private void ArrangeUIItems()
