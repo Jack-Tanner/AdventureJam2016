@@ -15,6 +15,8 @@ public class TrainJourneyManager : MonoBehaviour
     public float m_fTrainAcceleration = 0.001f;
     public bool m_bTrainMoving = false;
 
+    public static TrainJourneyManager m_instance;
+
     [System.Serializable]
     public class TrainJourney
     {
@@ -45,6 +47,18 @@ public class TrainJourneyManager : MonoBehaviour
 
     public Dictionary<int, TrainJourney> m_RouteAScenes = new Dictionary<int, TrainJourney>();
     public Dictionary<int, TrainJourney> m_RouteBScenes = new Dictionary<int, TrainJourney>();
+
+    AsyncOperation m_AsyncSceneLoad;
+
+    public void Awake()
+    {
+        m_instance = this;
+    }
+
+    public static TrainJourneyManager GetInstance()
+    {
+        return m_instance;
+    }
 
     public void Start()
     {
@@ -160,17 +174,35 @@ public class TrainJourneyManager : MonoBehaviour
 
     private void GoToLocationOnJourney(TrainJourney tJ)
     {
-
+        if (m_AsyncSceneLoad != null)
+        {
+            Debug.Log("TRYING TO LOAD SCENE WHILE BUSY LOADING SOMETHING ELSE!");
+            return;
+        }
         if (currentlyLoadedScene.isLoaded)
         {
             SceneManager.UnloadScene(currentlyLoadedScene.name);
         }
 
-        SceneManager.LoadScene(tJ.scene, LoadSceneMode.Additive);
-        currentlyLoadedScene = SceneManager.GetSceneByName(tJ.scene);
+        m_AsyncSceneLoad = SceneManager.LoadSceneAsync(tJ.scene, LoadSceneMode.Additive);
+        DoTransition(tJ);
 
+    }
+
+
+    public IEnumerable DoTransition(TrainJourney tJ)
+    {
+        //start fade
+        while (m_AsyncSceneLoad.isDone == false)
+        {
+            yield return null;
+        }
+        currentlyLoadedScene = SceneManager.GetSceneByName(tJ.scene);
         PositionPlayerInScene(currentlyLoadedScene);
 
+        //stop fade
+
+        m_AsyncSceneLoad = null;
     }
 
 

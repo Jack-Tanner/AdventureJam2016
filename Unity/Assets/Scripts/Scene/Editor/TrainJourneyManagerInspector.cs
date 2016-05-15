@@ -1,15 +1,43 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine.UI;
 
-public class TrainJourneyManagerInspector : MonoBehaviour {
+[CustomEditor(typeof(TrainJourneyManager))]
+public class TrainJourneyManagerInspector : Editor
+{
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private TrainJourneyManager tM;
+
+    public override void OnInspectorGUI()
+    {
+        tM = (TrainJourneyManager)target;
+        if (tM.m_bTrainMoving)
+        {
+            if (GUILayout.Button("STOP TRAIN"))
+            {
+                tM.StopTrain();
+            }
+        }
+        else
+        {
+            if (GUILayout.Button("START TRAIN"))
+            {
+                tM.StartTrain();
+            }
+            if (tM.HasTrainStopped())
+            {
+                if (GUILayout.Button("GET OFF TEH TRAINZ"))
+                {
+                    tM.GetOffTrain();
+                }
+                if (GUILayout.Button("GET ON TRAINZ"))
+                {
+                    tM.GoToTrain();
+                }
+            }
+        }
+        DrawDefaultInspector();
+    }
 }
