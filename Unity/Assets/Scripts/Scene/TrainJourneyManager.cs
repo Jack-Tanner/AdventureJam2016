@@ -96,6 +96,7 @@ public class TrainJourneyManager : MonoBehaviour
             if(m_fTrainSpeed < m_fTrainMaxSpeed)
             {
                 m_fTrainSpeed += m_fTrainAcceleration;
+                
             }
             m_fTrainSpeed = Mathf.Min(m_fTrainMaxSpeed, m_fTrainSpeed);
             m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
@@ -109,7 +110,8 @@ public class TrainJourneyManager : MonoBehaviour
             m_fTrainSpeed = Mathf.Max(0.0f, m_fTrainSpeed);
             m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
         }
-        
+
+        Train.SetBobAmount( m_fTrainSpeed );
 
     }
 

@@ -23,7 +23,7 @@ public class CarriageDoor : Interactable
     {
         if( m_TransitionToDoor != null )
         {
-            Player.GetInstance().transform.parent = m_OwningTrain.transform;
+            Player.GetInstance().transform.parent = m_TransitionToDoor.m_OwningTrain.transform;
             Player.GetInstance().WalkToLocation( m_TransitionToDoor.GetWalkToLocation() );
 
             CameraController.GetInstance().MoveToPosition( m_TransitionToDoor.m_OwningTrain.transform.position );

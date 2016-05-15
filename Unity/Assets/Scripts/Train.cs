@@ -4,7 +4,7 @@ using System.Collections;
 public class Train : MonoBehaviour
 {
     Vector3 startingPoint;
-    public float bobScale;
+    static float bobScale = 0.1f;
 
     // Use this for initialization
     void Start()
@@ -13,10 +13,13 @@ public class Train : MonoBehaviour
         StartCoroutine( "BobTrain" );
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Sets how much the train bobs by.
+    /// </summary>
+    /// <param name="amount"></param>
+    static public void SetBobAmount( float amount )
     {
-
+        bobScale = amount;
     }
 
     IEnumerator BobTrain()
