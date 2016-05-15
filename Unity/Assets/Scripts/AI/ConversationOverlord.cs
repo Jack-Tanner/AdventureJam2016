@@ -6,19 +6,25 @@ using UnityEngine.UI;
 public class ConversationOverlord : MonoBehaviour {
 
     public static ConversationOverlord instance;
+    public ConversationManager current_conversation;
+    public Text m_textBox;
+    public Canvas m_Canvas;
+
+    public GameObject m_optionsGo;
+    public Vector3 m_SpeechBoxOffset;
+    public Camera m_Camera;
+
+
     public static ConversationOverlord GetInstance()
     {
         return instance;
     }
+
     public void Awake()
     {
         instance = this;
+        m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
-
-
-    public ConversationManager current_conversation;
-    public Text m_textBox;
-    public GameObject m_optionsGo;
 
     public void SendText(string text)
     {
@@ -65,7 +71,7 @@ public class ConversationOverlord : MonoBehaviour {
     {
         if (m_bDoneTalking)
         {
-            m_textBox.gameObject.SetActive(false);
+            m_textBox.transform.parent.gameObject.SetActive(false);
             m_bDoneTalking = false;
         }
 
@@ -77,7 +83,13 @@ public class ConversationOverlord : MonoBehaviour {
         {
             bool autoTick = current_conversation.m_CurrentConversationNode.m_bIsSilent;
             m_bDoneTalking = current_conversation.DoSpeech();
-            m_textBox.gameObject.SetActive(true);
+            m_textBox.transform.parent.gameObject.SetActive(true);
+            //Vector3 speakerPosition = current_conversation.m_CurrentConversationNode.m_Speaker.transform.position;
+            //speakerPosition += m_SpeechBoxOffset;
+            //Vector3 cameraPos = m_Camera.WorldToViewportPoint(speakerPosition);
+            Vector3 cameraPos = Vector3.zero;
+            m_textBox.transform.parent.gameObject.transform.position = cameraPos;
+
             if (m_bDoneTalking)
             {
                 current_conversation = null;
