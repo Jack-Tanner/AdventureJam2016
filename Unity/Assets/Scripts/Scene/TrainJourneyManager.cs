@@ -15,7 +15,18 @@ public class TrainJourneyManager : MonoBehaviour
     public float m_fTrainAcceleration = 0.001f;
     public bool m_bTrainMoving = false;
 
+
+    public Vector3 m_vCameraOffset;
+    private Vector3 m_vOldCameraOffset = Vector3.zero;
     public static TrainJourneyManager m_instance;
+
+    public TrainJourney[] trainJourney;
+
+    public Dictionary<int, TrainJourney> m_RouteAScenes = new Dictionary<int, TrainJourney>();
+    public Dictionary<int, TrainJourney> m_RouteBScenes = new Dictionary<int, TrainJourney>();
+
+    private AsyncOperation m_AsyncSceneLoad;
+    private GameObject m_Camera;
 
     [System.Serializable]
     public class TrainJourney
@@ -43,16 +54,10 @@ public class TrainJourneyManager : MonoBehaviour
         public bool isPuzzle = false;
     }
 
-    public TrainJourney[] trainJourney;
-
-    public Dictionary<int, TrainJourney> m_RouteAScenes = new Dictionary<int, TrainJourney>();
-    public Dictionary<int, TrainJourney> m_RouteBScenes = new Dictionary<int, TrainJourney>();
-
-    AsyncOperation m_AsyncSceneLoad;
-
     public void Awake()
     {
         m_instance = this;
+        m_Camera = GameObject.Find("Main Camera");
     }
 
     public static TrainJourneyManager GetInstance()
@@ -123,6 +128,8 @@ public class TrainJourneyManager : MonoBehaviour
             return;
         }
 
+        m_vOldCameraOffset = m_Camera.transform.position;
+
         int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
         TrainJourney tJ = GetTrainStop(distanceTraveled);
         GoToLocationOnJourney(tJ);
@@ -164,13 +171,34 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void GoToTrain()
     {
+
+        if (m_AsyncSceneLoad != null)
+        {
+            Debug.Log("TRYING TO LOAD SCENE WHILE BUSY LOADING SOMETHING ELSE!");
+            return;
+        }
+
         if (currentlyLoadedScene.isLoaded)
         {
             SceneManager.UnloadScene(currentlyLoadedScene.name);
         }
 
+        StartCoroutine(DoTransitionTrain());
+
+    }
+
+    public IEnumerator DoTransitionTrain()
+    {
+        //while(fade up)
+        {
+            yield return null;
+        }
+
         Scene mainScene = SceneManager.GetSceneByName("TrainScene");
         PositionPlayerInScene(mainScene);
+
+        m_vOldCameraOffset = m_Camera.transform.position;
+        //fade down
     }
 
 
@@ -187,23 +215,20 @@ public class TrainJourneyManager : MonoBehaviour
         }
 
         m_AsyncSceneLoad = SceneManager.LoadSceneAsync(tJ.scene, LoadSceneMode.Additive);
-        StartCoroutine(DoTransition(tJ));
-
+        StartCoroutine(DoTransition(tJ.scene));
     }
 
-
-    public IEnumerator DoTransition(TrainJourney tJ)
+    public IEnumerator DoTransition(string scene)
     {
         //start fade
-        while (m_AsyncSceneLoad.isDone == false)
+        while (m_AsyncSceneLoad.isDone == false) //&& fade is done
         {
             yield return null;
         }
-        currentlyLoadedScene = SceneManager.GetSceneByName(tJ.scene);
+        currentlyLoadedScene = SceneManager.GetSceneByName(scene);
         PositionPlayerInScene(currentlyLoadedScene);
 
         //stop fade
-
         m_AsyncSceneLoad = null;
     }
 
