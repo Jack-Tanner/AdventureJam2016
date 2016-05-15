@@ -7,7 +7,7 @@ public class LeaveTrainDoor : Interactable
     {
         Debug.Log( "Get off train." );
 
-        Fade.GetInstance().FadeOn();
+        TrainJourneyManager.GetInstance().GetOffTrain();
     }
 
     public override bool Highlightable()
