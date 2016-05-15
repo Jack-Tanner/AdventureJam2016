@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 
@@ -7,6 +8,12 @@ public class TrainJourneyManager : MonoBehaviour
 {
 
     public Scene currentlyLoadedScene;
+    public float m_fTrainPosition = 0.0f;
+    public bool m_bUseOtherTrack = false;
+    public float m_fTrainSpeed = 0.0f;
+    public float m_fTrainMaxSpeed = 0.1f;
+    public float m_fTrainAcceleration = 0.001f;
+    public bool m_bTrainMoving = false;
 
     [System.Serializable]
     public class TrainJourney
@@ -36,6 +43,109 @@ public class TrainJourneyManager : MonoBehaviour
 
     public TrainJourney[] trainJourney;
 
+    public Dictionary<int, TrainJourney> m_RouteAScenes = new Dictionary<int, TrainJourney>();
+    public Dictionary<int, TrainJourney> m_RouteBScenes = new Dictionary<int, TrainJourney>();
+
+    public void Start()
+    {
+        
+        for(int i=0; i<trainJourney.Length; ++i)
+        {
+            TrainJourney tJ = trainJourney[i];
+            if (tJ.othersideOfTrack == false)
+            {
+                m_RouteAScenes[tJ.distance] = tJ;
+            }
+            else
+            {
+                m_RouteBScenes[tJ.distance] = tJ;
+            }
+        }
+
+
+    }
+
+
+    public void ResetTrainPosition()
+    {
+        //reset use other track? or is that a puzzle
+        //m_bUseOtherTrack = false;
+
+        m_fTrainPosition = 0.0f;
+    }
+
+    public void Update()
+    {
+
+        if(m_bTrainMoving)
+        {
+            if(m_fTrainSpeed < m_fTrainMaxSpeed)
+            {
+                m_fTrainSpeed += m_fTrainAcceleration;
+            }
+            m_fTrainSpeed = Mathf.Min(m_fTrainMaxSpeed, m_fTrainSpeed);
+            m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
+        }
+        else
+        {
+            if (m_fTrainSpeed > 0.0f)
+            {
+                m_fTrainSpeed -= m_fTrainAcceleration;
+            }
+            m_fTrainSpeed = Mathf.Max(0.0f, m_fTrainSpeed);
+            m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
+        }
+        
+
+    }
+
+    public void GetOffTrain()
+    {
+        if(HasTrainStopped() == false)
+        {
+            Debug.Log("TRAIN HAS NOT STOPPED");
+            return;
+        }
+
+        int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
+        TrainJourney tJ = GetTrainStop(distanceTraveled);
+        GoToLocationOnJourney(tJ);
+    }
+
+    private TrainJourney GetTrainStop(int position)
+    {
+        //if other side, try B, otherwise return A
+        if(m_bUseOtherTrack)
+        {
+            TrainJourney tJB = null;
+            m_RouteBScenes.TryGetValue(position, out tJB);
+            if(tJB != null)
+            {
+                return tJB;
+            }
+        }
+
+        TrainJourney tJ = null;
+        m_RouteAScenes.TryGetValue(position, out tJ);
+
+        return tJ;
+    }
+
+    public void StartTrain()
+    {
+        m_bTrainMoving = true;
+    }
+
+    public void StopTrain()
+    {
+        m_bTrainMoving = false;
+    }
+
+    public bool HasTrainStopped()
+    {
+        return m_fTrainSpeed <= float.Epsilon;
+    }
+
     public void GoToTrain()
     {
         if (currentlyLoadedScene.isLoaded)
@@ -48,7 +158,7 @@ public class TrainJourneyManager : MonoBehaviour
     }
 
 
-    public void GoToLocationOnJourney(TrainJourney tJ)
+    private void GoToLocationOnJourney(TrainJourney tJ)
     {
 
         if (currentlyLoadedScene.isLoaded)
