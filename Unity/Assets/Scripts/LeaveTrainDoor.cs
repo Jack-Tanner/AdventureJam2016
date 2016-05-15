@@ -6,8 +6,11 @@ public class LeaveTrainDoor : Interactable
     public override void ThenDo()
     {
         Debug.Log( "Get off train." );
-
-        TrainJourneyManager.GetInstance().GetOffTrain();
+        TrainJourneyManager trainJourneyManager = TrainJourneyManager.GetInstance();
+        if( trainJourneyManager != null && trainJourneyManager.HasTrainStopped() == true )
+        {
+            trainJourneyManager.GetOffTrain();
+        }
     }
 
     public override bool Highlightable()

@@ -14,6 +14,10 @@ public class ConversationManager : MonoBehaviour {
         if (    m_CurrentConversationNode.m_Speaker == npc &&
            (    string.IsNullOrEmpty(item) || Inventory.GetInstance().HasItem(item)))
         {
+            if( string.IsNullOrEmpty( item ) == false && Inventory.GetInstance().IsDataItem( item ) == false )
+            {
+                Inventory.GetInstance().RemoveItem( item );
+            }
             return true;
         }
         return false;

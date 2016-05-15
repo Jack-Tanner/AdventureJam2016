@@ -33,16 +33,27 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public GameObject m_ExampleUIItem;
 
+
+    public delegate void OnItemCollected( string item );
+    /// <summary>
+    /// Called when an item is collected.
+    /// </summary>
+    /// <param name="item">Name of item collected.</param>
+    public OnItemCollected m_OnItemCollected;
+
     /// <summary>
     /// Use this for initalization.
     /// </summary>
-    void Start()
+    void Awake()
     {
         m_Instance = this;
+    }
+
+    void Start()
+    {
         m_ExampleUIItem.SetActive( false );
         ArrangeUIItems();
     }
-
     /// <summary>
     /// Global access to the inventory.
     /// </summary>
@@ -59,10 +70,12 @@ public class Inventory : MonoBehaviour
     public void PickupItem( Item item )
     {
         m_PlayersItems.Add( item );
+        item.gameObject.SetActive( false );
+        Debug.Log( "Player picked up item " + item.m_ItemName );
+
+        m_OnItemCollected( item.m_ItemName );
 
         ArrangeUIItems();
-
-        Debug.Log( "Player picked up item " + item.m_ItemName );
     }
 
     /// <summary>
@@ -75,7 +88,9 @@ public class Inventory : MonoBehaviour
         GameObject newItemObject = new GameObject();
         Item newItem = newItemObject.AddComponent<Item>();
         newItem.m_ItemName = itemName;
-        newItem.m_IsDataItem = false;
+        newItem.m_IsDataItem = true;
+        // Hide everything under the quest manager.
+        newItemObject.transform.parent = QuestManager.GetInstance().transform;
         PickupItem(newItem);
     }
 
@@ -93,6 +108,44 @@ public class Inventory : MonoBehaviour
             if( m_PlayersItems[i].m_ItemName == itemName )
             {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Takes an item off the player.
+    /// </summary>
+    /// <param name="itemName"></param>
+    public void RemoveItem( string itemName )
+    {
+        int count = m_PlayersItems.Count;
+
+        for( int i = 0; i < count;  ++i )
+        {
+            if( m_PlayersItems[i].m_ItemName == itemName )
+            {
+                m_PlayersItems.RemoveAt( i );
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Check if an item is a data item
+    /// </summary>
+    /// <param name="itemName">Name of item in players inventory.</param>
+    /// <returns>true for data item.</returns>
+    public bool IsDataItem( string itemName )
+    {
+        int count = m_PlayersItems.Count;
+
+        for( int i = 0; i < count; ++i )
+        {
+            if( m_PlayersItems[i].m_ItemName == itemName )
+            {
+                return m_PlayersItems[i].m_IsDataItem;
             }
         }
 
@@ -150,7 +203,7 @@ public class Inventory : MonoBehaviour
         int visibleCount = 0;
         for( int i = 0; i < count; ++i )
         {
-            if( m_PlayersItems[i].IsDataItem() )
+            if( m_PlayersItems[i].IsDataItem() == false )
             {
                 if( index == visibleCount )
                 {

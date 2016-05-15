@@ -11,7 +11,7 @@ public class Item : Interactable
     /// <summary>
     /// If true then this item will be shown in the inventory. Set to false for information items.
     /// </summary>
-    public bool m_IsDataItem = true;
+    public bool m_IsDataItem = false;
 
     /// <summary>
     /// Accessor to item visiblility.
