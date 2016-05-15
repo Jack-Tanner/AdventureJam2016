@@ -17,7 +17,6 @@ public class TrainJourneyManager : MonoBehaviour
 
 
     public Vector3 m_vCameraOffset;
-    private Vector3 m_vOldCameraOffset = Vector3.zero;
     public static TrainJourneyManager m_instance;
 
     public TrainJourney[] trainJourney;
@@ -67,7 +66,6 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void Start()
     {
-        
         for(int i=0; i<trainJourney.Length; ++i)
         {
             TrainJourney tJ = trainJourney[i];
@@ -80,10 +78,7 @@ public class TrainJourneyManager : MonoBehaviour
                 m_RouteBScenes[tJ.distance] = tJ;
             }
         }
-
-
     }
-
 
     public void ResetTrainPosition()
     {
@@ -95,7 +90,6 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void Update()
     {
-
         if(m_bTrainMoving)
         {
             if(m_fTrainSpeed < m_fTrainMaxSpeed)
@@ -117,7 +111,6 @@ public class TrainJourneyManager : MonoBehaviour
         }
 
         Train.SetBobAmount( m_fTrainSpeed );
-
     }
 
     public void GetOffTrain()
@@ -127,8 +120,6 @@ public class TrainJourneyManager : MonoBehaviour
             Debug.Log("TRAIN HAS NOT STOPPED");
             return;
         }
-
-        m_vOldCameraOffset = m_Camera.transform.position;
 
         int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
         TrainJourney tJ = GetTrainStop(distanceTraveled);
@@ -154,54 +145,12 @@ public class TrainJourneyManager : MonoBehaviour
         return tJ;
     }
 
-    public void StartTrain()
-    {
-        m_bTrainMoving = true;
-    }
-
-    public void StopTrain()
-    {
-        m_bTrainMoving = false;
-    }
-
-    public bool HasTrainStopped()
-    {
-        return m_fTrainSpeed <= float.Epsilon;
-    }
-
     public void GoToTrain()
     {
-
-        if (m_AsyncSceneLoad != null)
-        {
-            Debug.Log("TRYING TO LOAD SCENE WHILE BUSY LOADING SOMETHING ELSE!");
-            return;
-        }
-
-        if (currentlyLoadedScene.isLoaded)
-        {
-            SceneManager.UnloadScene(currentlyLoadedScene.name);
-        }
-
-        StartCoroutine(DoTransitionTrain());
-
+        GoToLocationOnJourney(null);
     }
 
-    public IEnumerator DoTransitionTrain()
-    {
-        //while(fade up)
-        {
-            yield return null;
-        }
-
-        Scene mainScene = SceneManager.GetSceneByName("TrainScene");
-        PositionPlayerInScene(mainScene);
-
-        m_vOldCameraOffset = m_Camera.transform.position;
-        //fade down
-    }
-
-
+    //tJ == null for train scene
     private void GoToLocationOnJourney(TrainJourney tJ)
     {
         if (m_AsyncSceneLoad != null)
@@ -209,26 +158,48 @@ public class TrainJourneyManager : MonoBehaviour
             Debug.Log("TRYING TO LOAD SCENE WHILE BUSY LOADING SOMETHING ELSE!");
             return;
         }
-        if (currentlyLoadedScene.isLoaded)
+
+        if (tJ == null)
+        {
+            StartCoroutine(DoTransition("TrainScene", true));
+        }
+        else
+        {
+            m_AsyncSceneLoad = SceneManager.LoadSceneAsync(tJ.scene, LoadSceneMode.Additive);
+            StartCoroutine(DoTransition(tJ.scene));
+        }
+    }
+
+    public IEnumerator DoTransition(string scene, bool trainScene = false)
+    {
+        //start fade
+        Fade.GetInstance().FadeOn();
+        while ((trainScene == false && m_AsyncSceneLoad.isDone == false) || Fade.GetInstance().IsFading())
+        {
+            yield return null;
+        }
+
+        if (currentlyLoadedScene != null && currentlyLoadedScene.isLoaded)
         {
             SceneManager.UnloadScene(currentlyLoadedScene.name);
         }
 
-        m_AsyncSceneLoad = SceneManager.LoadSceneAsync(tJ.scene, LoadSceneMode.Additive);
-        StartCoroutine(DoTransition(tJ.scene));
-    }
+        Scene s = SceneManager.GetSceneByName(scene);
+        PositionPlayerInScene(s);
 
-    public IEnumerator DoTransition(string scene)
-    {
-        //start fade
-        while (m_AsyncSceneLoad.isDone == false) //&& fade is done
+        m_Camera.transform.position = Player.GetInstance().transform.position + m_vCameraOffset;
+
+        if (trainScene == false)
+        { 
+            currentlyLoadedScene = s;
+        }  
+
+        Fade.GetInstance().FadeOff();
+        while (Fade.GetInstance().IsFading())
         {
             yield return null;
         }
-        currentlyLoadedScene = SceneManager.GetSceneByName(scene);
-        PositionPlayerInScene(currentlyLoadedScene);
 
-        //stop fade
         m_AsyncSceneLoad = null;
     }
 
@@ -243,5 +214,20 @@ public class TrainJourneyManager : MonoBehaviour
                 Player.GetInstance().transform.position = rootObjects[i].transform.position;
             }
         }
+    }
+
+    public void StartTrain()
+    {
+        m_bTrainMoving = true;
+    }
+
+    public void StopTrain()
+    {
+        m_bTrainMoving = false;
+    }
+
+    public bool HasTrainStopped()
+    {
+        return m_fTrainSpeed <= float.Epsilon;
     }
 }
