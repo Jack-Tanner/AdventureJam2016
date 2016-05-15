@@ -185,12 +185,12 @@ public class TrainJourneyManager : MonoBehaviour
         }
 
         m_AsyncSceneLoad = SceneManager.LoadSceneAsync(tJ.scene, LoadSceneMode.Additive);
-        DoTransition(tJ);
+        StartCoroutine(DoTransition(tJ));
 
     }
 
 
-    public IEnumerable DoTransition(TrainJourney tJ)
+    public IEnumerator DoTransition(TrainJourney tJ)
     {
         //start fade
         while (m_AsyncSceneLoad.isDone == false)
