@@ -30,6 +30,7 @@ public class Interactable : MonoBehaviour
         switch( m_OnClickedBehaviour )
         {
             case InteractableBehaviour.WalkThenTalk:
+            case InteractableBehaviour.WalkThenDo:
             case InteractableBehaviour.WalkToLocation:
                 {
                     Vector3 position = transform.position;

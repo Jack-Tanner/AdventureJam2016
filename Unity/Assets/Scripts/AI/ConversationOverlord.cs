@@ -71,7 +71,7 @@ public class ConversationOverlord : MonoBehaviour {
 
         if (current_conversation == null)
         {
-            Debug.Log("Not in conversation");
+
         }
         else
         {

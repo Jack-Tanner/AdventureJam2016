@@ -75,7 +75,7 @@ public class Inventory : MonoBehaviour
         GameObject newItemObject = new GameObject();
         Item newItem = newItemObject.AddComponent<Item>();
         newItem.m_ItemName = itemName;
-        newItem.m_VisibleInInventory = false;
+        newItem.m_IsDataItem = false;
         PickupItem(newItem);
     }
 
@@ -150,7 +150,7 @@ public class Inventory : MonoBehaviour
         int visibleCount = 0;
         for( int i = 0; i < count; ++i )
         {
-            if( m_PlayersItems[i].IsVisibleItem() == true )
+            if( m_PlayersItems[i].IsDataItem() )
             {
                 if( index == visibleCount )
                 {
@@ -175,7 +175,7 @@ public class Inventory : MonoBehaviour
         int number = 0;
         for( int i = 0; i < count;  ++i )
         {
-            if( m_PlayersItems[i].IsVisibleItem() )
+            if( m_PlayersItems[i].IsDataItem() == false )
             {
                 ++number;
             }
