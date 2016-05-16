@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+
 /// <summary>
 /// Takes in all of the player's input.
 /// </summary>
@@ -7,9 +9,11 @@ public class InteractionMonitor : MonoBehaviour
 {
     public Player m_Player;
 
-    Interactable m_CurrentInteractable = null;
-    GameObject m_CurrentHighlight = null;
-    Vector3     m_HighlightScale;
+    Interactable    m_CurrentInteractable = null;
+    GameObject      m_CurrentHighlight = null;
+    //Vector3         m_HighlightScale;
+    public RectTransform   m_HoverOver;
+    public Text            m_NamePlate;
 
     bool m_ThenDoCalled = false;
 
@@ -38,16 +42,20 @@ public class InteractionMonitor : MonoBehaviour
                         // We we were just highlighing an object then shrink it.
                         if( m_CurrentHighlight != null )
                         {
-                            m_CurrentHighlight.transform.localScale = m_HighlightScale;
+                            //m_CurrentHighlight.transform.localScale = m_HighlightScale;
+                            m_HoverOver.gameObject.SetActive( false );
                         }
 
                         m_CurrentHighlight = interactable.gameObject;
-                        m_HighlightScale = m_CurrentHighlight.transform.localScale;
-
+                        //m_HighlightScale = m_CurrentHighlight.transform.localScale;
+                        
                         if( interactable.Highlightable() )
                         {
-                            m_CurrentHighlight.transform.localScale = m_HighlightScale * 1.2f;
-                        }
+                            m_HoverOver.gameObject.SetActive( true );
+                            m_NamePlate.text = interactable.GetHighlightName();
+                            //m_CurrentHighlight.transform.localScale = m_HighlightScale * 1.2f;
+                            m_HoverOver.transform.position = interactable.GetNamePlatePosition();
+                        }                        
                     }
 
 
@@ -91,8 +99,9 @@ public class InteractionMonitor : MonoBehaviour
                 // Release the interacting object.
                 if( m_CurrentHighlight != null )
                 {
-                    m_CurrentHighlight.transform.localScale = m_HighlightScale;
+                    //m_CurrentHighlight.transform.localScale = m_HighlightScale;
                     m_CurrentHighlight = null;
+                    m_HoverOver.gameObject.SetActive( false );
                 }
             }
 

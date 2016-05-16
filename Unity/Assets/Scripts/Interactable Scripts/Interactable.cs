@@ -25,6 +25,19 @@ public class Interactable : MonoBehaviour
     /// </summary>
     public float                    m_LocationOffset;
 
+    /// <summary>
+    /// How far away the name should show.
+    /// </summary>
+    public float                    m_NamePlateOffset;
+
+    /// <summary>
+    /// The string shown in the name plate.
+    /// </summary>
+    public string                   m_HightlightName;
+
+    /// <summary>
+    /// When the Editor draws in the Scene View.
+    /// </summary>
     void OnDrawGizmos()
     {
         switch( m_OnClickedBehaviour )
@@ -37,9 +50,18 @@ public class Interactable : MonoBehaviour
                     position.x += m_LocationOffset;
                     Gizmos.color = Color.red;
                     Gizmos.DrawLine( transform.position, position );
-                    Gizmos.DrawSphere( position, 0.05f );
+                    Gizmos.DrawSphere( position, 0.03f );
                 }
                 break;
+        }
+
+        if( Highlightable() )
+        {
+            Vector3 position = transform.position;
+            position.y += m_NamePlateOffset;
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine( transform.position, position );
+            Gizmos.DrawSphere( position, 0.03f );
         }
     }
 
@@ -65,5 +87,17 @@ public class Interactable : MonoBehaviour
     public virtual bool Highlightable()
     {
         return false;
+    }
+
+    public virtual Vector3 GetNamePlatePosition()
+    {
+        Vector3 position = transform.position;
+        position.y += m_NamePlateOffset;
+        return position;
+    }
+
+    public string GetHighlightName()
+    {
+        return m_HightlightName;
     }
 }
