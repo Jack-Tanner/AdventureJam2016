@@ -13,10 +13,13 @@ public class InteractionMonitor : MonoBehaviour
 
     bool m_ThenDoCalled = false;
 
-    // Update is called once per frame
+    /// <summary>
+    /// Called on every logic frame.
+    /// </summary>
     void Update()
     {
-        if( ConversationOverlord.GetInstance().current_conversation == null )
+        // Check that the player is able to click on things in the world.
+        if( UIManager.GetInstance().InputAllowed() && ConversationOverlord.GetInstance().current_conversation == null )
         {
             // Find where the player clicked in the world.
             Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint( Input.mousePosition );

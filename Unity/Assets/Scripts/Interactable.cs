@@ -37,7 +37,7 @@ public class Interactable : MonoBehaviour
                     position.x += m_LocationOffset;
                     Gizmos.color = Color.red;
                     Gizmos.DrawLine( transform.position, position );
-                    Gizmos.DrawSphere( position, 0.2f );
+                    Gizmos.DrawSphere( position, 0.05f );
                 }
                 break;
         }
