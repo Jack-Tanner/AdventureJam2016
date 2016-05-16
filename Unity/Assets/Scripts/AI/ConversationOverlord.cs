@@ -87,8 +87,8 @@ public class ConversationOverlord : MonoBehaviour {
             //Vector3 speakerPosition = current_conversation.m_CurrentConversationNode.m_Speaker.transform.position;
             //speakerPosition += m_SpeechBoxOffset;
             //Vector3 cameraPos = m_Camera.WorldToViewportPoint(speakerPosition);
-            Vector3 cameraPos = Vector3.zero;
-            m_textBox.transform.parent.gameObject.transform.position = cameraPos;
+            //Vector3 cameraPos = Vector3.zero;
+           // m_textBox.transform.parent.gameObject.transform.position = cameraPos;
 
             if (m_bDoneTalking)
             {

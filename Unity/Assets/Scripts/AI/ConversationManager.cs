@@ -9,10 +9,19 @@ public class ConversationManager : MonoBehaviour {
     {
         if (m_CurrentConversationNode == null)
             return false;
-        //Check for speech
+       
+        //Check we are at the right location
+        bool atRequiredLocation = (m_CurrentConversationNode.m_requiredLocation == TrainJourneyManager.TrainJourney.SceneLocation.NONE ||
+                                    (m_CurrentConversationNode.m_requiredLocation == TrainJourneyManager.GetInstance().GetCurrentLocation()));
+
+        //Check we have the right item
         string item = m_CurrentConversationNode.m_requiresObject;
-        if (    m_CurrentConversationNode.m_Speaker == npc &&
-           (    string.IsNullOrEmpty(item) || Inventory.GetInstance().HasItem(item)))
+        bool hasRequiredItem = string.IsNullOrEmpty(item) || Inventory.GetInstance().HasItem(item);
+
+        //check we are the one to talk
+        bool isRequiredSpeaker = m_CurrentConversationNode.m_Speaker == npc;
+
+        if ( isRequiredSpeaker && atRequiredLocation && hasRequiredItem )
         {
             if( string.IsNullOrEmpty( item ) == false && Inventory.GetInstance().IsDataItem( item ) == false )
             {

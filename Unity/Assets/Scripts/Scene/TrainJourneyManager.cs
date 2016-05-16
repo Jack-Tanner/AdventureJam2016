@@ -32,7 +32,8 @@ public class TrainJourneyManager : MonoBehaviour
             River,
             Tunel,
             SignalTower,
-            CrashSite
+            CrashSite,
+            NONE
         }
 
         public SceneLocation location;
@@ -218,5 +219,14 @@ public class TrainJourneyManager : MonoBehaviour
                 Player.GetInstance().transform.position = rootObjects[i].transform.position;
             }
         }
+    }
+
+
+    public TrainJourney.SceneLocation GetCurrentLocation()
+    {
+        int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
+        TrainJourney tJ = GetTrainStop(distanceTraveled);
+
+        return tJ.location;
     }
 }
