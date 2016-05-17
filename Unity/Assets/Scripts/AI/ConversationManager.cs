@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ConversationManager : MonoBehaviour {
-
+public class ConversationManager : MonoBehaviour
+{
     public ConversationNode m_CurrentConversationNode;
 
     public bool HaveSomethingToSay(GameObject npc)
@@ -14,6 +14,8 @@ public class ConversationManager : MonoBehaviour {
         bool atRequiredLocation = (m_CurrentConversationNode.m_requiredLocation == TrainJourneyManager.TrainJourney.SceneLocation.NONE ||
                                     (m_CurrentConversationNode.m_requiredLocation == TrainJourneyManager.GetInstance().GetCurrentLocation()));
 
+        bool shouldBeOnTrainOrOutside = m_CurrentConversationNode.m_requiredToBeOnTrain == TrainJourneyManager.GetInstance().IsOnTrain();
+
         //Check we have the right item
         string item = m_CurrentConversationNode.m_requiresObject;
         bool hasRequiredItem = string.IsNullOrEmpty(item) || Inventory.GetInstance().HasItem(item);
@@ -21,7 +23,7 @@ public class ConversationManager : MonoBehaviour {
         //check we are the one to talk
         bool isRequiredSpeaker = m_CurrentConversationNode.m_Speaker == npc;
 
-        if ( isRequiredSpeaker && atRequiredLocation && hasRequiredItem )
+        if ( isRequiredSpeaker && atRequiredLocation && hasRequiredItem && shouldBeOnTrainOrOutside)
         {
             if( string.IsNullOrEmpty( item ) == false && Inventory.GetInstance().IsDataItem( item ) == false )
             {
@@ -88,7 +90,12 @@ public class ConversationManager : MonoBehaviour {
 
     public void SaySpeech(ConversationNode c)
     {
-        ConversationOverlord.GetInstance().SendText(c.m_Speaker.name + " : " + c.m_sSpeech);
+        Vector3 textPosition = Vector3.zero;
+        if( c.TryGetConversationLocation( ref textPosition ) == false )
+        {
+            Debug.LogError( "NO INTERACTION SCRIPT SET ON CONVERSATION NODE " + c.m_Speaker.name );
+        }
+        ConversationOverlord.GetInstance().SendText(c.m_Speaker.name + " : " + c.m_sSpeech, textPosition);
     }
 
     public void ShowOptions()

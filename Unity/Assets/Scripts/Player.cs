@@ -11,7 +11,7 @@ public enum PlayerState
     Interacting
 }
 
-public class Player : MonoBehaviour
+public class Player : SpeechPosition
 {
     /// <summary>
     /// Is only populated when the player clicks on something it can interact with.
