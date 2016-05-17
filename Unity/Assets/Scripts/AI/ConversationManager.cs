@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ConversationManager : MonoBehaviour {
-
+public class ConversationManager : MonoBehaviour
+{
     public ConversationNode m_CurrentConversationNode;
 
     public bool HaveSomethingToSay(GameObject npc)
@@ -88,7 +88,12 @@ public class ConversationManager : MonoBehaviour {
 
     public void SaySpeech(ConversationNode c)
     {
-        ConversationOverlord.GetInstance().SendText(c.m_Speaker.name + " : " + c.m_sSpeech);
+        Vector3 textPosition = Vector3.zero;
+        if( c.TryGetConversationLocation( ref textPosition ) == false )
+        {
+            Debug.LogError( "NO INTERACTION SCRIPT SET ON CONVERSATION NODE " + c.m_Speaker.name );
+        }
+        ConversationOverlord.GetInstance().SendText(c.m_Speaker.name + " : " + c.m_sSpeech, textPosition);
     }
 
     public void ShowOptions()
