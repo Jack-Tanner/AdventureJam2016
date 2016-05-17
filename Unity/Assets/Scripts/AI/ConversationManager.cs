@@ -16,6 +16,8 @@ public class ConversationManager : MonoBehaviour
 
         bool shouldBeOnTrainOrOutside = m_CurrentConversationNode.m_requiredToBeOnTrain == TrainJourneyManager.GetInstance().IsOnTrain();
 
+        bool trainStopCheck = (m_CurrentConversationNode.m_trainMustBeStopped == false) || TrainJourneyManager.GetInstance().HasTrainStopped();
+
         //Check we have the right item
         string item = m_CurrentConversationNode.m_requiresObject;
         bool hasRequiredItem = string.IsNullOrEmpty(item) || Inventory.GetInstance().HasItem(item);
@@ -23,7 +25,7 @@ public class ConversationManager : MonoBehaviour
         //check we are the one to talk
         bool isRequiredSpeaker = m_CurrentConversationNode.m_Speaker == npc;
 
-        if ( isRequiredSpeaker && atRequiredLocation && hasRequiredItem && shouldBeOnTrainOrOutside)
+        if ( isRequiredSpeaker && atRequiredLocation && hasRequiredItem && shouldBeOnTrainOrOutside && trainStopCheck)
         {
             if( string.IsNullOrEmpty( item ) == false && Inventory.GetInstance().IsDataItem( item ) == false )
             {
