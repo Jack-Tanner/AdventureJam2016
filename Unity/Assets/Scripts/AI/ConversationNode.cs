@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ConversationNode : MonoBehaviour {
+public class ConversationNode : MonoBehaviour
+{
 
     public bool m_bConvCheckpoint;
     public GameObject m_Speaker;
 
     public string m_requiresObject;
     public TrainJourneyManager.TrainJourney.SceneLocation m_requiredLocation = TrainJourneyManager.TrainJourney.SceneLocation.NONE;
+    public bool m_requiredToBeOnTrain = true;
 
     public string m_sSpeech;
     public bool m_bIsSilent = false;
@@ -37,4 +39,24 @@ public class ConversationNode : MonoBehaviour {
         return transform.childCount > 1;
     }
 
+    /// <summary>
+    /// Returns true and assigns to the vector if we were able to get the location to place the speech text.
+    /// </summary>
+    /// <param name="inVector">reference to where the conversation location will go.</param>
+    /// <returns>true if the vector was populated.</returns>
+    public bool TryGetConversationLocation( ref Vector3 inVector )
+    {
+        if( m_Speaker != null )
+        {
+            SpeechPosition interactable = m_Speaker.gameObject.GetComponent<SpeechPosition>();
+            if( interactable != null )
+            {
+                inVector = interactable.GetPosition();
+                return true;
+            }
+        }
+
+        // Failed to get location.
+        return false;
+    }
 }

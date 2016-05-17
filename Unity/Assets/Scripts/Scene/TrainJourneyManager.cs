@@ -158,6 +158,11 @@ public class TrainJourneyManager : MonoBehaviour
         return m_fTrainSpeed <= float.Epsilon;
     }
 
+    public bool IsOnTrain()
+    {
+        return currentlyLoadedScene == null;
+    }
+
     public void GoToTrain()
     {
         GoToLocationOnJourney("TrainScene", true);

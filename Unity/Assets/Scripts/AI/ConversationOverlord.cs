@@ -7,13 +7,16 @@ public class ConversationOverlord : MonoBehaviour {
 
     public static ConversationOverlord instance;
     public ConversationManager current_conversation;
-    public Text m_textBox;
-    public Canvas m_Canvas;
+    public RectTransform m_textPosition;
 
     public GameObject m_optionsGo;
     public Vector3 m_SpeechBoxOffset;
     public Camera m_Camera;
 
+    /// <summary>
+    /// Must be a child of m_textPosition.
+    /// </summary>
+    private Text m_textBox;
 
     public static ConversationOverlord GetInstance()
     {
@@ -26,9 +29,31 @@ public class ConversationOverlord : MonoBehaviour {
         m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
 
-    public void SendText(string text)
+    void Start()
+    {
+        if( m_textPosition != null )
+        {
+            m_textBox = m_textPosition.gameObject.GetComponentInChildren<Text>( true );
+            if( m_textBox == null )
+            {
+                Debug.LogError( "Unable to find the text for conversations." );
+            }
+        }
+        else
+        {
+            Debug.LogError( "No text attached to the Conversation Overloard." );
+        }
+    }
+
+    /// <summary>
+    /// Called to show someone is talking. Sets the text and position of the text box.
+    /// </summary>
+    /// <param name="text">What text to show.</param>
+    /// <param name="textPosition">Where to show it in world space.</param>
+    public void SendText(string text, Vector3 textPosition)
     {
         m_textBox.text = text;
+        m_textPosition.position = textPosition;
     }
 
     public void ShowOptions(string[] options)
@@ -71,7 +96,7 @@ public class ConversationOverlord : MonoBehaviour {
     {
         if (m_bDoneTalking)
         {
-            m_textBox.transform.parent.gameObject.SetActive(false);
+            m_textPosition.gameObject.SetActive(false);
             m_bDoneTalking = false;
         }
 
@@ -83,7 +108,7 @@ public class ConversationOverlord : MonoBehaviour {
         {
             bool autoTick = current_conversation.m_CurrentConversationNode.m_bIsSilent;
             m_bDoneTalking = current_conversation.DoSpeech();
-            m_textBox.transform.parent.gameObject.SetActive(true);
+            m_textPosition.gameObject.SetActive(true);
             //Vector3 speakerPosition = current_conversation.m_CurrentConversationNode.m_Speaker.transform.position;
             //speakerPosition += m_SpeechBoxOffset;
             //Vector3 cameraPos = m_Camera.WorldToViewportPoint(speakerPosition);
