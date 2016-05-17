@@ -16,7 +16,8 @@ public class TrainJourneyManager : MonoBehaviour
     public bool m_bTrainMoving = false;
 
     public Camera m_Camera;
-    public Vector3 m_CameraSpawnOffset;
+    public Vector3 m_CameraSpawnOffsetOnTrain;
+    public Vector3 m_CameraSpawnOffsetOffTrain;
 
     public GameObject m_TrainCarrage3;
 
@@ -237,13 +238,15 @@ public class TrainJourneyManager : MonoBehaviour
                 if (isTrainScene)
                 {
                     Player.GetInstance().transform.parent = m_TrainCarrage3.transform;
+                    m_Camera.transform.position = rootObjects[i].transform.position + m_CameraSpawnOffsetOnTrain;
                 }
                 else
                 { 
                     Player.GetInstance().transform.parent = Player.GetInstance().transform.root;
+                    m_Camera.transform.position = rootObjects[i].transform.position + m_CameraSpawnOffsetOffTrain;
                 }
                 Player.GetInstance().transform.position = rootObjects[i].transform.position;
-                m_Camera.transform.position = rootObjects[i].transform.position + m_CameraSpawnOffset;
+
             }
         }
     }
