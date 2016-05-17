@@ -56,6 +56,9 @@ public class TrainJourneyManager : MonoBehaviour
     public Dictionary<int, TrainJourney> m_RouteBScenes = new Dictionary<int, TrainJourney>();
 
     private AsyncOperation m_AsyncSceneLoad;
+    private bool m_bIsOnTrain = true;
+
+
 
     public void Awake()
     {
@@ -160,7 +163,7 @@ public class TrainJourneyManager : MonoBehaviour
 
     public bool IsOnTrain()
     {
-        return currentlyLoadedScene == null;
+        return m_bIsOnTrain;
     }
 
     public void GoToTrain()
@@ -216,7 +219,12 @@ public class TrainJourneyManager : MonoBehaviour
         Scene s = SceneManager.GetSceneByName(scene);
         if (isTrainScene == false)
         {
+            m_bIsOnTrain = false;
             currentlyLoadedScene = s;
+        }
+        else
+        {
+            m_bIsOnTrain = true;
         }
 
         PositionPlayerInScene(s, isTrainScene);
