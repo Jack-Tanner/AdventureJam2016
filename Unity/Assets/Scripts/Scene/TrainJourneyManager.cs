@@ -15,6 +15,11 @@ public class TrainJourneyManager : MonoBehaviour
     public float m_fTrainAcceleration = 0.001f;
     public bool m_bTrainMoving = false;
 
+    public Camera m_Camera;
+    public Vector3 m_CameraSpawnOffset;
+
+    public GameObject m_TrainCarrage3;
+
     public static TrainJourneyManager m_instance;
 
     [System.Serializable]
@@ -49,11 +54,13 @@ public class TrainJourneyManager : MonoBehaviour
     public Dictionary<int, TrainJourney> m_RouteAScenes = new Dictionary<int, TrainJourney>();
     public Dictionary<int, TrainJourney> m_RouteBScenes = new Dictionary<int, TrainJourney>();
 
-    AsyncOperation m_AsyncSceneLoad;
+    private AsyncOperation m_AsyncSceneLoad;
 
     public void Awake()
     {
         m_instance = this;
+        m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        m_TrainCarrage3 = GameObject.Find("Train 3");
     }
 
     public static TrainJourneyManager GetInstance()
@@ -116,19 +123,6 @@ public class TrainJourneyManager : MonoBehaviour
 
     }
 
-    public void GetOffTrain()
-    {
-        if(HasTrainStopped() == false)
-        {
-            Debug.Log("TRAIN HAS NOT STOPPED");
-            return;
-        }
-
-        int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
-        TrainJourney tJ = GetTrainStop(distanceTraveled);
-        GoToLocationOnJourney(tJ);
-    }
-
     private TrainJourney GetTrainStop(int position)
     {
         //if other side, try B, otherwise return A
@@ -165,58 +159,91 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void GoToTrain()
     {
-        if (currentlyLoadedScene.isLoaded)
-        {
-            SceneManager.UnloadScene(currentlyLoadedScene.name);
-        }
-
-        Scene mainScene = SceneManager.GetSceneByName("TrainScene");
-        PositionPlayerInScene(mainScene);
+        GoToLocationOnJourney("TrainScene", true);
     }
 
+    public void GetOffTrain()
+    {
+        if (HasTrainStopped() == false)
+        {
+            Debug.Log("TRAIN HAS NOT STOPPED");
+            return;
+        }
 
-    private void GoToLocationOnJourney(TrainJourney tJ)
+        int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
+        TrainJourney tJ = GetTrainStop(distanceTraveled);
+        GoToLocationOnJourney(tJ.scene, false);
+    }
+
+    private void GoToLocationOnJourney(string scene, bool isTrainScene)
     {
         if (m_AsyncSceneLoad != null)
         {
             Debug.Log("TRYING TO LOAD SCENE WHILE BUSY LOADING SOMETHING ELSE!");
             return;
         }
+
+        if (isTrainScene == false)
+        {
+            m_AsyncSceneLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+        }
+
+        StartCoroutine(DoTransition(scene, isTrainScene));
+
+    }
+
+
+    public IEnumerator DoTransition(string scene, bool isTrainScene)
+    {
+
+        Fade.GetInstance().FadeOn();
+        while ((m_AsyncSceneLoad != null && m_AsyncSceneLoad.isDone == false) || Fade.GetInstance().IsFading())
+        {
+            yield return null;
+        }
+
         if (currentlyLoadedScene.isLoaded)
         {
             SceneManager.UnloadScene(currentlyLoadedScene.name);
         }
 
-        m_AsyncSceneLoad = SceneManager.LoadSceneAsync(tJ.scene, LoadSceneMode.Additive);
-        StartCoroutine(DoTransition(tJ));
+        Scene s = SceneManager.GetSceneByName(scene);
+        if (isTrainScene == false)
+        {
+            currentlyLoadedScene = s;
+        }
 
-    }
+        PositionPlayerInScene(s, isTrainScene);
 
+        Fade.GetInstance().FadeOff();
 
-    public IEnumerator DoTransition(TrainJourney tJ)
-    {
-        //start fade
-        while (m_AsyncSceneLoad.isDone == false)
+        while (Fade.GetInstance().IsFading())
         {
             yield return null;
         }
-        currentlyLoadedScene = SceneManager.GetSceneByName(tJ.scene);
-        PositionPlayerInScene(currentlyLoadedScene);
-
-        //stop fade
 
         m_AsyncSceneLoad = null;
     }
 
 
-    public void PositionPlayerInScene(Scene s)
+    public void PositionPlayerInScene(Scene s, bool isTrainScene)
     {
         GameObject[] rootObjects = s.GetRootGameObjects();
         for (int i = 0; i < rootObjects.Length; ++i)
         {
             if (rootObjects[i].name == "SpawnPoint")
             {
+
+                if (isTrainScene)
+                {
+                    Player.GetInstance().transform.parent = m_TrainCarrage3.transform;
+                }
+                else
+                { 
+                    Player.GetInstance().transform.parent = Player.GetInstance().transform.root;
+                }
                 Player.GetInstance().transform.position = rootObjects[i].transform.position;
+                m_Camera.transform.position = rootObjects[i].transform.position + m_CameraSpawnOffset;
             }
         }
     }
