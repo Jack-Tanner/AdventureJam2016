@@ -15,6 +15,8 @@ public class TrainJourneyManager : MonoBehaviour
     public float m_fTrainAcceleration = 0.001f;
     public bool m_bTrainMoving = false;
 
+    public float BackgroundScrollSpeed = 1.0f;
+
     public static TrainJourneyManager m_instance;
 
     [System.Serializable]
@@ -42,12 +44,15 @@ public class TrainJourneyManager : MonoBehaviour
         public bool othersideOfTrack = false;
         public bool isDayTime = true;
         public bool isPuzzle = false;
+        public GameObject BackgroundPrefab = null;
     }
 
     public TrainJourney[] trainJourney;
 
     public Dictionary<int, TrainJourney> m_RouteAScenes = new Dictionary<int, TrainJourney>();
     public Dictionary<int, TrainJourney> m_RouteBScenes = new Dictionary<int, TrainJourney>();
+
+    private List<GameObject> BackgroundObjects = new List<GameObject>();
 
     AsyncOperation m_AsyncSceneLoad;
 
@@ -63,7 +68,8 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void Start()
     {
-        
+        float fXPos = 0.0f;
+
         for(int i=0; i<trainJourney.Length; ++i)
         {
             TrainJourney tJ = trainJourney[i];
@@ -75,9 +81,17 @@ public class TrainJourneyManager : MonoBehaviour
             {
                 m_RouteBScenes[tJ.distance] = tJ;
             }
+
+            if (tJ.BackgroundPrefab)
+            {
+                GameObject background = Instantiate(tJ.BackgroundPrefab);
+                BackgroundObjects.Add(background);
+
+                float fPrefabWidth = GetPrefabMaxWidth(ref background);
+                background.transform.position = new Vector3(fXPos, 0.0f, 5.0f);
+                fXPos += fPrefabWidth;
+            }
         }
-
-
     }
 
 
@@ -89,8 +103,19 @@ public class TrainJourneyManager : MonoBehaviour
         m_fTrainPosition = 0.0f;
     }
 
+    private void ScrollBackgrounds()
+    {
+        foreach( GameObject obj in BackgroundObjects )
+        {
+            Vector3 newPosition = obj.transform.position;
+            newPosition.x -= BackgroundScrollSpeed * Time.deltaTime;
+            obj.transform.position = newPosition;
+        }
+    }
+
     public void Update()
     {
+        ScrollBackgrounds();
 
         if(m_bTrainMoving)
         {
@@ -221,12 +246,30 @@ public class TrainJourneyManager : MonoBehaviour
         }
     }
 
-
     public TrainJourney.SceneLocation GetCurrentLocation()
     {
         int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
         TrainJourney tJ = GetTrainStop(distanceTraveled);
 
         return tJ.location;
+    }
+
+    private float GetPrefabMaxWidth(ref GameObject gameObj )
+    {
+        float fHighestWidth = 0.0f;
+
+        Transform[] allChildren = gameObj.GetComponentsInChildren<Transform>();
+        foreach(Transform child in allChildren)
+        {
+            SpriteRenderer renderer = child.gameObject.GetComponent<SpriteRenderer>();
+            if (renderer)
+            {
+                float fWidth = child.bounds.size.x;
+                if (fWidth > fHighestWidth)
+                    fHighestWidth = fWidth;
+            }
+        }
+
+        return fHighestWidth;
     }
 }
