@@ -11,7 +11,7 @@ public enum PlayerState
     Interacting
 }
 
-public class Player : MonoBehaviour
+public class Player : SpeechPosition
 {
     /// <summary>
     /// Is only populated when the player clicks on something it can interact with.
@@ -60,9 +60,15 @@ public class Player : MonoBehaviour
     public void SetState( PlayerState state ) { m_State = state; }
 
 
+    /// <summary>
+    /// The SpriteRenderer attached to the player, used to flip the image when walking.
+    /// </summary>
+    private SpriteRenderer m_SpriteRenderer = null;
+
     void Start()
     {
         m_Instance = this;
+        m_SpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -109,6 +115,9 @@ public class Player : MonoBehaviour
         m_TargetXPosition = xPosition;
 
         m_State = PlayerState.Walking;
+
+        // See if we need to flip the sprite.
+        m_SpriteRenderer.flipX = xPosition < transform.position.x;
     }
 
     /// <summary>

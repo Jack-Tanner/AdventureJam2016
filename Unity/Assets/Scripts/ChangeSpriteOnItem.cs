@@ -26,4 +26,9 @@ public class ChangeSpriteOnItem : MonoBehaviour
             gameObject.GetComponent<SpriteRenderer>().sprite = m_NewSprite;
         }
     }
+
+    void OnDestroy()
+    {
+        Inventory.GetInstance().m_OnItemCollected -= OnItemCollected;
+    }
 }
