@@ -6,7 +6,11 @@ public class SpeechPosition : MonoBehaviour
     /// <summary>
     /// Where to put the speech object.
     /// </summary>
-    public float m_speechOffset = 0.0f;
+    public float m_speechOffsetY = 0.0f;
+    /// <summary>
+    /// Where to put the speech object.
+    /// </summary>
+    public float m_speechOffsetX = 0.0f;
 
     /// <summary>
     /// Returns the position to set the speech object at.
@@ -18,7 +22,8 @@ public class SpeechPosition : MonoBehaviour
 
         // May need to compensate for the train bob.
 
-        speechPosition.y += m_speechOffset;
+        speechPosition.y += m_speechOffsetY;
+        speechPosition.x += m_speechOffsetX;
 
         return speechPosition;
     }
@@ -29,7 +34,8 @@ public class SpeechPosition : MonoBehaviour
     void OnDrawGizmos()
     {
         Vector3 position = transform.position;
-        position.y += m_speechOffset;
+        position.y += m_speechOffsetY;
+        position.x += m_speechOffsetX;
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine( transform.position, position );
         Gizmos.DrawCube( position, Vector3.one * 0.1f );

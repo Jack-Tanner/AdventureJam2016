@@ -26,9 +26,14 @@ public class Interactable : MonoBehaviour
     public float                    m_LocationOffset;
 
     /// <summary>
-    /// How far away the name should show.
+    /// How far away the name should show in Y axis.
     /// </summary>
-    public float                    m_NamePlateOffset;
+    public float                    m_NamePlateOffsetY;
+
+    /// <summary>
+    /// How far away the name should showin X axis.
+    /// </summary>
+    public float                    m_NamePlateOffsetX;
 
     /// <summary>
     /// The string shown in the name plate.
@@ -58,7 +63,8 @@ public class Interactable : MonoBehaviour
         if( Highlightable() )
         {
             Vector3 position = transform.position;
-            position.y += m_NamePlateOffset;
+            position.y += m_NamePlateOffsetY;
+            position.x += m_NamePlateOffsetX;
             Gizmos.color = Color.blue;
             Gizmos.DrawLine( transform.position, position );
             Gizmos.DrawSphere( position, 0.03f );
@@ -92,7 +98,8 @@ public class Interactable : MonoBehaviour
     public virtual Vector3 GetNamePlatePosition()
     {
         Vector3 position = transform.position;
-        position.y += m_NamePlateOffset;
+        position.y += m_NamePlateOffsetY;
+        position.x += m_NamePlateOffsetX;
         return position;
     }
 
