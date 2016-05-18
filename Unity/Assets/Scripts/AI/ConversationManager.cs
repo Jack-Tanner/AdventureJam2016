@@ -21,11 +21,16 @@ public class ConversationManager : MonoBehaviour
         //Check we have the right item
         string item = m_CurrentConversationNode.m_requiresObject;
         bool hasRequiredItem = string.IsNullOrEmpty(item) || Inventory.GetInstance().HasItem(item);
+        
+        string otheritem = m_CurrentConversationNode.m_requiresAnotherObject;
+        bool hasRequiredOtherItem = string.IsNullOrEmpty(otheritem) || Inventory.GetInstance().HasItem(otheritem);
+
+
 
         //check we are the one to talk
         bool isRequiredSpeaker = m_CurrentConversationNode.m_Speaker == npc;
 
-        if ( isRequiredSpeaker && atRequiredLocation && hasRequiredItem && shouldBeOnTrainOrOutside && trainStopCheck)
+        if (isRequiredSpeaker && atRequiredLocation && hasRequiredItem && shouldBeOnTrainOrOutside && trainStopCheck && hasRequiredOtherItem)
         {
             if( string.IsNullOrEmpty( item ) == false && Inventory.GetInstance().IsDataItem( item ) == false )
             {

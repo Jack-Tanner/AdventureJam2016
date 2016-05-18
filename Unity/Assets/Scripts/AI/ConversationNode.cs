@@ -8,6 +8,7 @@ public class ConversationNode : MonoBehaviour
     public GameObject m_Speaker;
 
     public string m_requiresObject;
+    public string m_requiresAnotherObject;
     public TrainJourneyManager.TrainJourney.SceneLocation m_requiredLocation = TrainJourneyManager.TrainJourney.SceneLocation.NONE;
     public bool m_requiredToBeOnTrain = true;
     public bool m_trainMustBeStopped = false;
