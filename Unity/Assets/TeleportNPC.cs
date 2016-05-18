@@ -14,9 +14,11 @@ public class TeleportNPC : MonoBehaviour
 
     void Awake()
     {
-
-        if (Inventory.GetInstance().HasItem(m_RequiredObjective) == false)
-            return;
+        if (string.IsNullOrEmpty(m_RequiredObjective) == false)
+        {
+            if (Inventory.GetInstance().HasItem(m_RequiredObjective) == false)
+                return;
+        }
 
         foundNPC = GameObject.Find(NameOfNPCToTeleport);
         if(foundNPC == null)
