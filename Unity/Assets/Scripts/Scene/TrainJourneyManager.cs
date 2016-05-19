@@ -23,6 +23,10 @@ public class TrainJourneyManager : MonoBehaviour
 
     public static TrainJourneyManager m_instance;
 
+    public delegate void OnTransition();
+    public event OnTransition m_OnTransition;
+
+
     [System.Serializable]
     public class TrainJourney
     {
@@ -224,6 +228,10 @@ public class TrainJourneyManager : MonoBehaviour
             m_bIsOnTrain = true;
         }
 
+        if(m_OnTransition != null)
+        {
+            m_OnTransition();
+        }
         PositionPlayerInScene(s, isTrainScene);
 
         Fade.GetInstance().FadeOff();

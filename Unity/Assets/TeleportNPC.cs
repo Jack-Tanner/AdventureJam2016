@@ -28,7 +28,13 @@ public class TeleportNPC : MonoBehaviour
         m_oldTransformParent = foundNPC.transform.parent;
         m_oldPosition = foundNPC.transform.position;
 
+        TrainJourneyManager.GetInstance().m_OnTransition += TransitionOutside;
+    }
 
+    public void TransitionOutside()
+    {
+        //lool very hacky
+        TrainJourneyManager.GetInstance().m_OnTransition -= TransitionOutside;
 
         foundNPC.transform.parent = transform.parent;
         foundNPC.transform.position = transform.position;
@@ -41,20 +47,27 @@ public class TeleportNPC : MonoBehaviour
         }
     }
 
+    void TransitionInside()
+    {
+        TrainJourneyManager.GetInstance().m_OnTransition -= TransitionInside;
+
+        foundNPC.transform.parent = m_oldTransformParent;
+        foundNPC.transform.position = m_oldPosition;
+
+        Animator animator = foundNPC.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetTrigger("Idle");
+        }
+
+    }
 
 
     void OnDestroy()
     {
         if (foundNPC != null)
         {
-            foundNPC.transform.parent = m_oldTransformParent;
-            foundNPC.transform.position = m_oldPosition;
-
-            Animator animator = foundNPC.GetComponent<Animator>();
-            if (animator != null)
-            {
-                animator.SetTrigger("Idle");
-            }
+            TrainJourneyManager.GetInstance().m_OnTransition += TransitionInside;
         }
     }
 }
