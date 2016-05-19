@@ -21,7 +21,7 @@ public class Respawner : MonoBehaviour {
                 fSpriteWidth = originalRenderer.bounds.size.x;
             }
 
-            fDestroyXPosition = RespawnObject.transform.position.x - (fSpriteWidth * 4);
+            fDestroyXPosition = RespawnObject.transform.position.x - (fSpriteWidth * 4) + 0.5f;
 
 
             // Spawn 3 left
@@ -54,7 +54,6 @@ public class Respawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
         if (RespawnObject)
         {
             if (RespawnObject.transform.position.x <= fDestroyXPosition)

@@ -30,15 +30,15 @@ public class DayNight : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        BackgroundManager backgroundManager = BackgroundManager.GetInstance();
-        if (backgroundManager != null && m_SpriteRenderer != null)
+        TrainJourneyManager journeyManager = TrainJourneyManager.GetInstance();
+        if (journeyManager != null && m_SpriteRenderer != null)
         {
-            if (backgroundManager.NightTime && m_CurrentlyNight == false )
+            if (journeyManager.IsDayTime() == false && m_CurrentlyNight == false )
             {
                 m_CurrentlyNight = true;
                 m_SpriteRenderer.sprite = NightSprite;
             }
-            else if (backgroundManager.NightTime == false && m_CurrentlyNight == true)
+            else if (journeyManager.IsDayTime() && m_CurrentlyNight == true)
             {
                 m_CurrentlyNight = false;
                 m_SpriteRenderer.sprite = DaySprite;

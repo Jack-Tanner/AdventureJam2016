@@ -22,6 +22,8 @@ public class BackgroundManager : MonoBehaviour {
     public float CloudsMidSpeed = 1.0f;
     public float CloudsBottomSpeed = 1.0f;
 
+    public float StationarySkyMultiplier = 0.5f;
+
 
     public bool NightTime = false;
 
@@ -56,19 +58,23 @@ public class BackgroundManager : MonoBehaviour {
 
     private void ScrollSkyAndClouds()
     {
-        // TODO: Scroll slower when train is stopped.
-        ScrollObject(ref Sky, SkySpeed);
-        ScrollObject(ref CloudsTop, CloudsTopSpeed);
-        ScrollObject(ref CloudsMid, CloudsMidSpeed);
-        ScrollObject(ref CloudsBottom, CloudsBottomSpeed);
+        TrainJourneyManager journeyManager = TrainJourneyManager.GetInstance();
+        float fSpeedOffset = journeyManager.GetTrainSpeedPercentage();
+        fSpeedOffset = Mathf.Clamp(fSpeedOffset, StationarySkyMultiplier, 1.0f);
+        ScrollObject(ref Sky, SkySpeed * fSpeedOffset);
+        ScrollObject(ref CloudsTop, CloudsTopSpeed * fSpeedOffset);
+        ScrollObject(ref CloudsMid, CloudsMidSpeed * fSpeedOffset);
+        ScrollObject(ref CloudsBottom, CloudsBottomSpeed * fSpeedOffset);
+        ScrollObject(ref Horizon, HorizonSpeed * fSpeedOffset);
     }
 
     private void ScrollBackground()
     {
-        ScrollObject(ref Horizon, HorizonSpeed);
-        ScrollObject(ref Rocks, RocksSpeed);
-        ScrollObject(ref Floor, FloorSpeed);
-        ScrollObject(ref Rails, RailsSpeed);
+        TrainJourneyManager journeyManager = TrainJourneyManager.GetInstance();
+        float fSpeedOffset = journeyManager.GetTrainSpeedPercentage();
+        ScrollObject(ref Rocks, RocksSpeed * fSpeedOffset);
+        ScrollObject(ref Floor, FloorSpeed * fSpeedOffset);
+        ScrollObject(ref Rails, RailsSpeed * fSpeedOffset);
     }
 
 	// Use this for initialization
@@ -78,10 +84,16 @@ public class BackgroundManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        ScrollSkyAndClouds();
+        TrainJourneyManager journeyManager = TrainJourneyManager.GetInstance();
+        if (journeyManager)
+        {
+            ScrollSkyAndClouds();
 
-        // TODO: Pause when train is stopped.
-        ScrollBackground();
+            if (!journeyManager.HasTrainStopped())
+            {
+                ScrollBackground();
+            }
+        }
 
     }
 }

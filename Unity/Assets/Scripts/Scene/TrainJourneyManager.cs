@@ -58,8 +58,6 @@ public class TrainJourneyManager : MonoBehaviour
     private AsyncOperation m_AsyncSceneLoad;
     private bool m_bIsOnTrain = true;
 
-
-
     public void Awake()
     {
         m_instance = this;
@@ -102,7 +100,6 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void Update()
     {
-
         if(m_bTrainMoving)
         {
             if(m_fTrainSpeed < m_fTrainMaxSpeed)
@@ -271,5 +268,34 @@ public class TrainJourneyManager : MonoBehaviour
         TrainJourney tJ = GetTrainStop(distanceTraveled);
 
         return tJ.location;
+    }
+
+    public bool IsDayTime()
+    {
+        int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
+
+        //if other side, try B, otherwise return A
+        if (m_bUseOtherTrack)
+        {
+            TrainJourney tJB = null;
+            m_RouteBScenes.TryGetValue(distanceTraveled, out tJB);
+            if (tJB != null)
+            {
+                return tJB.isDayTime;
+            }
+        }
+
+        TrainJourney tJ = null;
+        m_RouteAScenes.TryGetValue(distanceTraveled, out tJ);
+
+        return tJ.isDayTime;
+    }
+
+    public float GetTrainSpeedPercentage()
+    {
+        if (m_fTrainSpeed == 0.0f || m_fTrainMaxSpeed == 0.0f)
+            return 0.0f;
+        
+        return m_fTrainSpeed / m_fTrainMaxSpeed;
     }
 }
