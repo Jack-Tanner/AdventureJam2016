@@ -164,7 +164,6 @@ public class InteractionMonitor : MonoBehaviour
     /// </summary>
     public void TurnOffNamePlate()
     {
-        Debug.Log( "TURN ONDDA" );
         if( m_HoverOver != null )
         {
             m_HoverOver.gameObject.SetActive( false );

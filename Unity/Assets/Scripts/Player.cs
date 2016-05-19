@@ -80,7 +80,6 @@ public class Player : SpeechPosition
 
             if( Mathf.Abs( m_TargetXPosition - position.x ) < 0.03f )
             {
-                Debug.Log( m_TargetXPosition - position.x );
                 position.x = m_TargetXPosition;
                 m_State = PlayerState.Ready;
             }
