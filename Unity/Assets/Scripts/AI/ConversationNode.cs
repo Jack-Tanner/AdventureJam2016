@@ -13,13 +13,15 @@ public class ConversationNode : MonoBehaviour
     public bool m_requiredToBeOnTrain = true;
     public bool m_trainMustBeStopped = false;
 
-
+    
     public string m_sSpeech;
     public bool m_bIsSilent = false;
 
 
     public Item m_sGiveItem;
     public string m_sObjective;
+
+    public string m_setAnimation;
 
     public ConversationNode GetNext()
     {

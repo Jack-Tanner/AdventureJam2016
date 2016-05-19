@@ -62,6 +62,19 @@ public class ConversationManager : MonoBehaviour
             {
                 Inventory.GetInstance().GiveInfoItem(m_CurrentConversationNode.m_sObjective);
             }
+
+            if (string.IsNullOrEmpty(m_CurrentConversationNode.m_setAnimation) == false)
+            {
+                if (m_CurrentConversationNode.m_Speaker != null)
+                {
+                    Animator animator = m_CurrentConversationNode.m_Speaker.GetComponent<Animator>();
+                    if (animator != null)
+                    {
+                        animator.SetTrigger(m_CurrentConversationNode.m_setAnimation);
+                    }
+                }
+            }
+            
         }
 
         ConversationNode newNode = m_CurrentConversationNode.GetNext();

@@ -109,11 +109,7 @@ public class ConversationOverlord : MonoBehaviour {
             bool autoTick = current_conversation.m_CurrentConversationNode.m_bIsSilent;
             m_bDoneTalking = current_conversation.DoSpeech();
             m_textPosition.gameObject.SetActive(true);
-            //Vector3 speakerPosition = current_conversation.m_CurrentConversationNode.m_Speaker.transform.position;
-            //speakerPosition += m_SpeechBoxOffset;
-            //Vector3 cameraPos = m_Camera.WorldToViewportPoint(speakerPosition);
-            //Vector3 cameraPos = Vector3.zero;
-           // m_textBox.transform.parent.gameObject.transform.position = cameraPos;
+
 
             if (m_bDoneTalking)
             {
