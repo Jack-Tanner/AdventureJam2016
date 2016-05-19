@@ -121,6 +121,9 @@ public class InteractionMonitor : MonoBehaviour
 
                             // Then tell it to do.
                             m_CurrentInteractable.ThenDo();
+
+                            // Turn the player to face what the're doing.
+                            m_Player.SetFacingPosition( m_Player.transform.position.x > m_CurrentInteractable.transform.position.x );
                         }
                         else
                         {

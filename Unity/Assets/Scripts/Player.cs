@@ -121,6 +121,15 @@ public class Player : SpeechPosition
     }
 
     /// <summary>
+    /// Sets the direction the player is facing.
+    /// </summary>
+    /// <param name="bFaceLeft">Pass true to face left, false for right.</param>
+    public void SetFacingPosition( bool bFaceLeft )
+    {
+        m_SpriteRenderer.flipX = bFaceLeft;
+    }
+
+    /// <summary>
     /// Moves the player to the last safe position and stops it
     /// from moving.
     /// </summary>
