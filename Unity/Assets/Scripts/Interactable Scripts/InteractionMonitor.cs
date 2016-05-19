@@ -17,6 +17,22 @@ public class InteractionMonitor : MonoBehaviour
 
     bool m_ThenDoCalled = false;
 
+    private static InteractionMonitor m_Instance;
+
+    /// <summary>
+    /// Global Accessor.
+    /// </summary>
+    /// <returns></returns>
+    public static InteractionMonitor GetInstance()
+    {
+        return m_Instance;
+    }
+
+    void Start()
+    {
+        m_Instance = this;
+    }
+
     /// <summary>
     /// Called on every logic frame.
     /// </summary>
@@ -139,6 +155,19 @@ public class InteractionMonitor : MonoBehaviour
                         break;
                 }
             }
+        }
+    }
+
+
+    /// <summary>
+    /// Hides the name plate that's shown when hovering over things.
+    /// </summary>
+    public void TurnOffNamePlate()
+    {
+        Debug.Log( "TURN ONDDA" );
+        if( m_HoverOver != null )
+        {
+            m_HoverOver.gameObject.SetActive( false );
         }
     }
 }
