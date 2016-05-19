@@ -121,7 +121,7 @@ public class TrainJourneyManager : MonoBehaviour
         }
 
         Train.SetBobAmount( m_fTrainSpeed );
-
+        TrainDistanceText.Set( m_fTrainPosition + " km" );
     }
 
     private TrainJourney GetTrainStop(int position)
