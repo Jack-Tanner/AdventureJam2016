@@ -14,6 +14,8 @@ public class ConversationOverlord : MonoBehaviour
     public Vector3 m_SpeechBoxOffset;
     public Camera m_Camera;
 
+    private int clickCounter = 1;
+
     /// <summary>
     /// Must be a child of m_textPosition.
     /// </summary>
@@ -118,6 +120,7 @@ public class ConversationOverlord : MonoBehaviour
             if (m_bDoneTalking)
             {
                 current_conversation = null;
+                clickCounter = 0;
             }
 
             if (autoTick)
@@ -125,6 +128,15 @@ public class ConversationOverlord : MonoBehaviour
                 TickConversation();
             }
         }
+
+        clickCounter++;
+    }
+
+
+    public bool DoneTalking()
+    {
+        //have to click twice before finished
+        return current_conversation == null && clickCounter > 1;
     }
 
 }

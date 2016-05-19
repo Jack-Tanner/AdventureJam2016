@@ -48,7 +48,7 @@ public class InteractionMonitor : MonoBehaviour
     void Update()
     {
         // Check that the player is able to click on things in the world.
-        if( UIManager.GetInstance().InputAllowed() && ConversationOverlord.GetInstance().current_conversation == null )
+        if (UIManager.GetInstance().InputAllowed() && ConversationOverlord.GetInstance().DoneTalking () )
         {
             // Find where the player clicked in the world.
             Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint( Input.mousePosition );
