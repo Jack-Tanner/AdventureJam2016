@@ -19,6 +19,9 @@ public class InteractionMonitor : MonoBehaviour
 
     private static InteractionMonitor m_Instance;
 
+    public Texture2D cursorTexture;
+    public CursorMode cursorMode = CursorMode.Auto;
+
     /// <summary>
     /// Global Accessor.
     /// </summary>
@@ -31,6 +34,12 @@ public class InteractionMonitor : MonoBehaviour
     void Start()
     {
         m_Instance = this;
+        Cursor.SetCursor( cursorTexture, Vector2.zero, cursorMode );
+    }
+
+    void OnDestroy()
+    {
+        Cursor.SetCursor( null, Vector2.zero, cursorMode );
     }
 
     /// <summary>
