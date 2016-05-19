@@ -82,4 +82,12 @@ public class UIManager : MonoBehaviour
             m_MapImage.color  = new Color( 1.0f, 1.0f, 1.0f, ( m_MapShown ? 1.0f : 0.0f ) );
         }
     }
+
+    /// <summary>
+    /// Called when the restart button is pressed.
+    /// </summary>
+    public void OnRestartPressed()
+    {
+        Debug.Log( "Restart Pressed." );
+    }
 }

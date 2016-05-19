@@ -3,12 +3,13 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-public class ConversationOverlord : MonoBehaviour {
+public class ConversationOverlord : MonoBehaviour
+{
 
     public static ConversationOverlord instance;
     public ConversationManager current_conversation;
     public RectTransform m_textPosition;
-
+    
     public GameObject m_optionsGo;
     public Vector3 m_SpeechBoxOffset;
     public Camera m_Camera;
@@ -54,6 +55,9 @@ public class ConversationOverlord : MonoBehaviour {
     {
         m_textBox.text = text;
         m_textPosition.position = textPosition;
+
+        // Make sure we turn off the name plate.
+        InteractionMonitor.GetInstance().TurnOffNamePlate();
     }
 
     public void ShowOptions(string[] options)

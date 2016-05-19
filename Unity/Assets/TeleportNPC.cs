@@ -32,6 +32,13 @@ public class TeleportNPC : MonoBehaviour
 
         foundNPC.transform.parent = transform.parent;
         foundNPC.transform.position = transform.position;
+
+        //lol hacky
+        Animator animator = foundNPC.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetTrigger("Stand");
+        }
     }
 
 
@@ -42,6 +49,12 @@ public class TeleportNPC : MonoBehaviour
         {
             foundNPC.transform.parent = m_oldTransformParent;
             foundNPC.transform.position = m_oldPosition;
+
+            Animator animator = foundNPC.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.SetTrigger("Idle");
+            }
         }
     }
 }

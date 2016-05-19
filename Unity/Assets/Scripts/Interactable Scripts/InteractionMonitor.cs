@@ -17,6 +17,22 @@ public class InteractionMonitor : MonoBehaviour
 
     bool m_ThenDoCalled = false;
 
+    private static InteractionMonitor m_Instance;
+
+    /// <summary>
+    /// Global Accessor.
+    /// </summary>
+    /// <returns></returns>
+    public static InteractionMonitor GetInstance()
+    {
+        return m_Instance;
+    }
+
+    void Start()
+    {
+        m_Instance = this;
+    }
+
     /// <summary>
     /// Called on every logic frame.
     /// </summary>
@@ -121,6 +137,9 @@ public class InteractionMonitor : MonoBehaviour
 
                             // Then tell it to do.
                             m_CurrentInteractable.ThenDo();
+
+                            // Turn the player to face what the're doing.
+                            m_Player.SetFacingPosition( m_Player.transform.position.x > m_CurrentInteractable.transform.position.x );
                         }
                         else
                         {
@@ -136,6 +155,18 @@ public class InteractionMonitor : MonoBehaviour
                         break;
                 }
             }
+        }
+    }
+
+
+    /// <summary>
+    /// Hides the name plate that's shown when hovering over things.
+    /// </summary>
+    public void TurnOffNamePlate()
+    {
+        if( m_HoverOver != null )
+        {
+            m_HoverOver.gameObject.SetActive( false );
         }
     }
 }

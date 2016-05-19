@@ -78,7 +78,7 @@ public class Player : SpeechPosition
         {
             Vector3 position = transform.position;
 
-            if( Mathf.Abs( m_TargetXPosition - position.x ) < 0.1f )
+            if( Mathf.Abs( m_TargetXPosition - position.x ) < 0.03f )
             {
                 position.x = m_TargetXPosition;
                 m_State = PlayerState.Ready;
@@ -118,6 +118,15 @@ public class Player : SpeechPosition
 
         // See if we need to flip the sprite.
         m_SpriteRenderer.flipX = xPosition < transform.position.x;
+    }
+
+    /// <summary>
+    /// Sets the direction the player is facing.
+    /// </summary>
+    /// <param name="bFaceLeft">Pass true to face left, false for right.</param>
+    public void SetFacingPosition( bool bFaceLeft )
+    {
+        m_SpriteRenderer.flipX = bFaceLeft;
     }
 
     /// <summary>
