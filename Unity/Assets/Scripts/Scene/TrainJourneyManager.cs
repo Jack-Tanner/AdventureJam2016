@@ -26,6 +26,10 @@ public class TrainJourneyManager : MonoBehaviour
     public delegate void OnTransition();
     public event OnTransition m_OnTransition;
 
+    public GameObject OverlaySpawnPoint = null;
+    public GameObject CanyonOverlay = null;
+    public GameObject BridgeOverlay = null;
+    public GameObject TunnelOverlay = null;
     public bool m_bStartedOutro = false;
     
     //Force text to speak, no matter the conditions.
@@ -66,9 +70,13 @@ public class TrainJourneyManager : MonoBehaviour
 
     private AsyncOperation m_AsyncSceneLoad;
     private bool m_bIsOnTrain = true;
-
+    
     public delegate void TrackChanged(bool otherTrack);
     public TrackChanged OnTrackChanged;
+
+    private GameObject LastSpawnedOverlay = null;
+    private TrainJourney.SceneLocation LastLocation = TrainJourney.SceneLocation.Station;
+
 
     public void Awake()
     {
@@ -109,11 +117,91 @@ public class TrainJourneyManager : MonoBehaviour
         GoToTrain(true);
     }
 
+<<<<<<< HEAD
     /// <summary>
     /// Called to change the track/route.
     /// </summary>
     /// <param name="bOtherTrack">should we use the other track.</param>
     public void ChangeTrack( bool bOtherTrack )
+=======
+    public void UpdateOverlays()
+    {
+        int distanceTraveled = Mathf.FloorToInt(m_fTrainPosition);
+        TrainJourney currentTJ = GetTrainStop(distanceTraveled);
+
+        if (currentTJ == null || (currentTJ.location != TrainJourney.SceneLocation.Bridge &&
+            currentTJ.location != TrainJourney.SceneLocation.Canyon &&
+            currentTJ.location != TrainJourney.SceneLocation.Tunel) )
+        {
+            if ((m_fTrainPosition + 0.2f) >= ((float)distanceTraveled + 1.0f) )
+            { 
+                currentTJ = GetTrainStop(distanceTraveled + 1);
+
+                if (currentTJ == null || (currentTJ.location != TrainJourney.SceneLocation.Bridge &&
+                     currentTJ.location != TrainJourney.SceneLocation.Canyon &&
+                     currentTJ.location != TrainJourney.SceneLocation.Tunel))
+                    return;
+
+            }
+            else
+                return;
+        }
+
+        if( currentTJ != null )
+        {
+            GameObject ToSpawn = null;
+            bool bStartOver = false;
+
+            switch( currentTJ.location )
+            {
+                case TrainJourney.SceneLocation.Bridge:
+                    ToSpawn = BridgeOverlay;
+                    break;
+                case TrainJourney.SceneLocation.Canyon:
+                    ToSpawn = CanyonOverlay;
+                    break;
+                case TrainJourney.SceneLocation.Tunel:
+                    ToSpawn = TunnelOverlay;
+                    break;
+                default:
+                    break;
+            }
+
+            if (currentTJ.location != LastLocation)
+            {
+                LastLocation = currentTJ.location;
+                bStartOver = true;
+            }
+
+            if (ToSpawn != null && OverlaySpawnPoint != null )
+            {
+                if (LastSpawnedOverlay == null || bStartOver)
+                {
+                    bStartOver = false;
+                    LastSpawnedOverlay = Instantiate(ToSpawn);
+                    LastSpawnedOverlay.transform.position = OverlaySpawnPoint.transform.position;
+                }
+                else
+                {
+                    if( LastSpawnedOverlay.transform.position.x <= (OverlaySpawnPoint.transform.position.x - 3.4f) )
+                    {
+                        Vector3 LastPosition = LastSpawnedOverlay.transform.position;
+                        SpriteRenderer renderer = LastSpawnedOverlay.GetComponent<SpriteRenderer>();
+                        if (renderer)
+                            LastPosition.x += renderer.bounds.size.x - 0.1f;
+
+                        LastSpawnedOverlay = Instantiate(ToSpawn);
+                        LastSpawnedOverlay.transform.position = LastPosition;
+                    }
+                }
+            }
+        }
+
+      
+    }
+
+    public void Update()
+>>>>>>> origin/master
     {
         m_bUseOtherTrack = bOtherTrack;
         OnTrackChanged( bOtherTrack );
@@ -169,6 +257,8 @@ public class TrainJourneyManager : MonoBehaviour
             m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
         }
 
+        UpdateOverlays();
+
         Train.SetBobAmount( m_fTrainSpeed );
         TrainDistanceText.Set( m_fTrainPosition.ToString("0.0") + " km" );
     }
@@ -188,8 +278,10 @@ public class TrainJourneyManager : MonoBehaviour
 
         TrainJourney tJ = null;
         m_RouteAScenes.TryGetValue(position, out tJ);
+        if( tJ != null )
+            return tJ;
 
-        return tJ;
+        return null;
     }
 
     public void StartTrain()
@@ -224,8 +316,13 @@ public class TrainJourneyManager : MonoBehaviour
             Debug.Log("TRAIN HAS NOT STOPPED");
             return;
         }
+<<<<<<< HEAD
         
         int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
+=======
+
+        int distanceTraveled = Mathf.FloorToInt(m_fTrainPosition);
+>>>>>>> origin/master
         TrainJourney tJ = GetTrainStop(distanceTraveled);
         GoToLocationOnJourney(tJ.scene, false);
     }
@@ -334,7 +431,7 @@ public class TrainJourneyManager : MonoBehaviour
 
     public TrainJourney.SceneLocation GetCurrentLocation()
     {
-        int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
+        int distanceTraveled = Mathf.FloorToInt(m_fTrainPosition);
         TrainJourney tJ = GetTrainStop(distanceTraveled);
 
         return tJ.location;
@@ -342,7 +439,7 @@ public class TrainJourneyManager : MonoBehaviour
 
     public bool IsDayTime()
     {
-        int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
+        int distanceTraveled = Mathf.FloorToInt(m_fTrainPosition);
 
         //if other side, try B, otherwise return A
         if (m_bUseOtherTrack)
