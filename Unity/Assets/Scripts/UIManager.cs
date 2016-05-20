@@ -9,6 +9,9 @@ public class UIManager : MonoBehaviour
     public Image    m_BreakButtonImage;
     public Image    m_MapImage;
 
+    public AudioSource MapOpenSound;
+    public AudioSource MapCloseSound;
+
     private bool    m_MapShown = false;
 
     private static UIManager m_Instance = null;
@@ -95,6 +98,16 @@ public class UIManager : MonoBehaviour
         if( m_MapImage != null )
         {
             m_MapShown = !m_MapShown;
+            
+            if( m_MapShown )
+            {
+                MapOpenSound.Play();
+            }
+            else
+            {
+                MapCloseSound.Play();
+            }
+
             //m_MapImage.color  = new Color( 1.0f, 1.0f, 1.0f, ( m_MapShown ? 1.0f : 0.0f ) );
             m_MapImage.gameObject.SetActive( m_MapShown );
         }

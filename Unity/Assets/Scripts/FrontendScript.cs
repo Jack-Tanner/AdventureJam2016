@@ -44,6 +44,7 @@ public class FrontendScript : MonoBehaviour {
                 case FrontendState.kHowToPlay:
                     eState = FrontendState.kFadeOut;
                     Fade.GetInstance().FadeOn();
+                    GetComponent<FadeOutAudio>().bTrigger = true;
                     break;
                 case FrontendState.kFadeOut:
                     break;
