@@ -36,6 +36,8 @@ public class TrainJourneyManager : MonoBehaviour
     public AudioSource StopTrainAudio;
     public AudioSource LoopTrainAudio;
 
+    public bool DontChangeLocation = false;
+
     //Force text to speak, no matter the conditions.
     //also lol hacky
     public ConversationManager m_OutroConversation = null;
@@ -282,7 +284,8 @@ public class TrainJourneyManager : MonoBehaviour
                 
             }
             m_fTrainSpeed = Mathf.Min(m_fTrainMaxSpeed, m_fTrainSpeed);
-            m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
+            if(!DontChangeLocation)
+                m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
         }
         else
         {
@@ -291,7 +294,8 @@ public class TrainJourneyManager : MonoBehaviour
                 m_fTrainSpeed -= m_fTrainAcceleration;
             }
             m_fTrainSpeed = Mathf.Max(0.0f, m_fTrainSpeed);
-            m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
+            if(!DontChangeLocation)
+                m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
         }
 
         UpdateOverlays();
