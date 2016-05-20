@@ -129,7 +129,7 @@ public class ConversationManager : MonoBehaviour
 
     public void LoadOutroScene()
     {
-        SceneManager.LoadScene("OutroScene");
+        SceneManager.LoadScene("Credits");
     }
 
     public void SaySpeech(ConversationNode c)
