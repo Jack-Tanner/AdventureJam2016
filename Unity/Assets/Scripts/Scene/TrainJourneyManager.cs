@@ -67,6 +67,9 @@ public class TrainJourneyManager : MonoBehaviour
     private AsyncOperation m_AsyncSceneLoad;
     private bool m_bIsOnTrain = true;
 
+    public delegate void TrackChanged(bool otherTrack);
+    public TrackChanged OnTrackChanged;
+
     public void Awake()
     {
         m_instance = this;
@@ -82,7 +85,6 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void Start()
     {
-        
         for(int i=0; i<trainJourney.Length; ++i)
         {
             TrainJourney tJ = trainJourney[i];
@@ -107,9 +109,26 @@ public class TrainJourneyManager : MonoBehaviour
         GoToTrain(true);
     }
 
+    /// <summary>
+    /// Called to change the track/route.
+    /// </summary>
+    /// <param name="bOtherTrack">should we use the other track.</param>
+    public void ChangeTrack( bool bOtherTrack )
+    {
+        m_bUseOtherTrack = bOtherTrack;
+        OnTrackChanged( bOtherTrack );
+    }
+
+    /// <summary>
+    /// returns if we're using the other track.
+    /// </summary>
+    public bool GetIsUsingOtherTrack()
+    {
+        return m_bUseOtherTrack;
+    }
+
     public void Update()
     {
-
         if (QuestManager.GetInstance().GameIsComplete())
         {
             if (m_bTrainMoving)
@@ -205,7 +224,7 @@ public class TrainJourneyManager : MonoBehaviour
             Debug.Log("TRAIN HAS NOT STOPPED");
             return;
         }
-
+        
         int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
         TrainJourney tJ = GetTrainStop(distanceTraveled);
         GoToLocationOnJourney(tJ.scene, false);

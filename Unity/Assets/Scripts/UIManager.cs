@@ -52,7 +52,6 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void OnBreakPressed()
     {
-
         TrainJourneyManager trainJourneyManager = TrainJourneyManager.GetInstance();
         if( trainJourneyManager != null )
         {
