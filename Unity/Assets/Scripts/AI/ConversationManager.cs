@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+
 
 public class ConversationManager : MonoBehaviour
 {
@@ -74,6 +76,28 @@ public class ConversationManager : MonoBehaviour
                     }
                 }
             }
+
+            //#lazy
+            if (m_CurrentConversationNode.m_bDoTheSpookyThing)
+            {
+                //lol sorry dan
+                Quest q = m_CurrentConversationNode.m_Speaker.GetComponent<Quest>();
+                q.CheckItem(q.m_CompleteQuestItem);
+
+                ConversationOverlord.GetInstance().SendText("", Vector3.one*9001); //far too lazy to do this correctly
+            }
+
+            if (m_CurrentConversationNode.m_bFadeToWhite)
+            {
+                Fade.GetInstance().FadeToWhite();
+                Fade.GetInstance().OnFadeComplete += LoadOutroScene;
+                ConversationOverlord.GetInstance().SendText("", Vector3.one * 9001);//far too lazy to do this correctly
+            }
+
+            if (m_CurrentConversationNode.m_AudioToPlay != null)
+            {
+                ConversationOverlord.GetInstance().m_AudioSourceSFX.PlayOneShot(m_CurrentConversationNode.m_AudioToPlay);
+            }
             
         }
 
@@ -108,12 +132,21 @@ public class ConversationManager : MonoBehaviour
         return false;
     }
 
+    public void LoadOutroScene()
+    {
+        SceneManager.LoadScene("Credits");
+    }
+
     public void SaySpeech(ConversationNode c)
     {
         Vector3 textPosition = Vector3.zero;
         if( c.TryGetConversationLocation( ref textPosition ) == false )
         {
             Debug.LogError( "NO INTERACTION SCRIPT SET ON CONVERSATION NODE " + c.m_Speaker.name );
+        }
+        if(string.IsNullOrEmpty(c.m_sSpeech))
+        {
+            return;
         }
         ConversationOverlord.GetInstance().SendText(c.m_Speaker.name + " : " + c.m_sSpeech, textPosition);
     }

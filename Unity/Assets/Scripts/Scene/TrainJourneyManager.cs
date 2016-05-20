@@ -30,6 +30,11 @@ public class TrainJourneyManager : MonoBehaviour
     public GameObject CanyonOverlay = null;
     public GameObject BridgeOverlay = null;
     public GameObject TunnelOverlay = null;
+    public bool m_bStartedOutro = false;
+    
+    //Force text to speak, no matter the conditions.
+    //also lol hacky
+    public ConversationManager m_OutroConversation = null;
 
     [System.Serializable]
     public class TrainJourney
@@ -74,6 +79,7 @@ public class TrainJourneyManager : MonoBehaviour
         m_instance = this;
         m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
         m_TrainCarrage3 = GameObject.Find("Train 3");
+        m_bStartedOutro = false;
     }
 
     public static TrainJourneyManager GetInstance()
@@ -101,12 +107,11 @@ public class TrainJourneyManager : MonoBehaviour
     }
 
 
-    public void ResetTrainPosition()
+    public void ResetTrain()
     {
         //reset use other track? or is that a puzzle
         //m_bUseOtherTrack = false;
-
-        m_fTrainPosition = 0.0f;
+        GoToTrain(true);
     }
 
     public void UpdateOverlays()
@@ -187,6 +192,27 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void Update()
     {
+
+        if (QuestManager.GetInstance().GameIsComplete())
+        {
+            if (m_bTrainMoving)
+            {
+                StopTrain();
+            }
+            else
+            {
+                if( m_bStartedOutro == false)
+                {
+                    m_bStartedOutro = true;
+                    ConversationOverlord.GetInstance().current_conversation = m_OutroConversation;
+                    ConversationOverlord.GetInstance().TickConversation();
+                }
+            }
+
+
+        }
+
+
         if(m_bTrainMoving)
         {
             if(m_fTrainSpeed < m_fTrainMaxSpeed)
@@ -254,9 +280,9 @@ public class TrainJourneyManager : MonoBehaviour
         return m_bIsOnTrain;
     }
 
-    public void GoToTrain()
+    public void GoToTrain(bool isReset = false)
     {
-        GoToLocationOnJourney("TrainScene", true);
+        GoToLocationOnJourney("TrainScene", true, isReset);
     }
 
     public void GetOffTrain()
@@ -272,7 +298,7 @@ public class TrainJourneyManager : MonoBehaviour
         GoToLocationOnJourney(tJ.scene, false);
     }
 
-    private void GoToLocationOnJourney(string scene, bool isTrainScene)
+    private void GoToLocationOnJourney(string scene, bool isTrainScene, bool isReset = false)
     {
         if (m_AsyncSceneLoad != null)
         {
@@ -285,12 +311,12 @@ public class TrainJourneyManager : MonoBehaviour
             m_AsyncSceneLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
         }
 
-        StartCoroutine(DoTransition(scene, isTrainScene));
+        StartCoroutine(DoTransition(scene, isTrainScene, isReset));
 
     }
 
 
-    public IEnumerator DoTransition(string scene, bool isTrainScene)
+    public IEnumerator DoTransition(string scene, bool isTrainScene, bool isReset = false)
     {
 
         Fade.GetInstance().FadeOn();
@@ -319,7 +345,15 @@ public class TrainJourneyManager : MonoBehaviour
         {
             m_OnTransition();
         }
-        PositionPlayerInScene(s, isTrainScene);
+        PositionPlayerInScene(s, isTrainScene, isReset);
+
+
+        if (isReset)
+        {
+            m_fTrainPosition = 0.0f;
+            GetComponent<AudioSource>().Play();
+        }
+
 
         Fade.GetInstance().FadeOff();
 
@@ -332,18 +366,27 @@ public class TrainJourneyManager : MonoBehaviour
     }
 
 
-    public void PositionPlayerInScene(Scene s, bool isTrainScene)
+    public void PositionPlayerInScene(Scene s, bool isTrainScene, bool reset)
     {
         GameObject[] rootObjects = s.GetRootGameObjects();
         for (int i = 0; i < rootObjects.Length; ++i)
         {
-            if (rootObjects[i].name == "SpawnPoint")
+
+            string placement = reset ? "StartingPos" : "SpawnPoint";
+            if (rootObjects[i].name == placement)
             {
 
                 if (isTrainScene)
                 {
                     Player.GetInstance().transform.parent = m_TrainCarrage3.transform;
-                    m_Camera.transform.position = rootObjects[i].transform.position + m_CameraSpawnOffsetOnTrain;
+                    if (reset)
+                    {
+                        m_Camera.transform.position = new Vector3(0.0f,0.0f,-26.77f);
+                    }
+                    else
+                    {
+                        m_Camera.transform.position = new Vector3(-8.568f, 0.0f, -26.77f);
+                    }
                 }
                 else
                 { 

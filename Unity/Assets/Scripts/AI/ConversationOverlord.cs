@@ -16,6 +16,8 @@ public class ConversationOverlord : MonoBehaviour
 
     private int clickCounter = 1;
 
+    public AudioSource m_AudioSourceSFX;
+
     /// <summary>
     /// Must be a child of m_textPosition.
     /// </summary>
@@ -46,6 +48,8 @@ public class ConversationOverlord : MonoBehaviour
         {
             Debug.LogError( "No text attached to the Conversation Overloard." );
         }
+
+        TickConversation();
     }
 
     /// <summary>

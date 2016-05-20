@@ -4,6 +4,10 @@ using System.Collections;
 
 public class Fade : MonoBehaviour
 {
+
+    public delegate void FadeComplete();
+    public event FadeComplete OnFadeComplete;
+
     enum FadeEnum
     {
         eFadingOff,
@@ -20,12 +24,17 @@ public class Fade : MonoBehaviour
 
     private FadeEnum m_state = FadeEnum.eOff;
 
+    public float m_fFadeColour = 0.0f;
+
+
     private static Fade m_Instance;
 
     void Start()
     {
         m_Instance = this;
         m_FadeImage = gameObject.GetComponent<Image>();
+        m_fFadeColour = 0.0f;
+        OnFadeComplete = null;
     }
 
     /// <summary>
@@ -59,12 +68,17 @@ public class Fade : MonoBehaviour
 
                     int blockyFade = (int)( alphaValue * 10.0f );
                     alphaValue = (float)blockyFade * 0.1f;
-                    m_FadeImage.color = new Color( 0.0f, 0.0f, 0.0f, alphaValue );
+                    m_FadeImage.color = new Color(m_fFadeColour, m_fFadeColour, m_fFadeColour, alphaValue);
                 }
                 else
                 {
-                    m_FadeImage.color = new Color( 0.0f, 0.0f, 0.0f, 1.0f );
+                    m_FadeImage.color = new Color(m_fFadeColour, m_fFadeColour, m_fFadeColour, 1.0f);
                     m_state = FadeEnum.eOn;
+
+                    if (OnFadeComplete != null)
+                    {
+                        OnFadeComplete();
+                    }
                 }
 
                 break;
@@ -77,11 +91,11 @@ public class Fade : MonoBehaviour
 
                     int blockyFade = (int)( alphaValue * 10.0f );
                     alphaValue = (float)blockyFade * 0.1f;
-                    m_FadeImage.color = new Color( 0.0f, 0.0f, 0.0f, alphaValue );
+                    m_FadeImage.color = new Color(m_fFadeColour, m_fFadeColour, m_fFadeColour, alphaValue);
                 }
                 else
                 {
-                    m_FadeImage.color = new Color( 0.0f, 0.0f, 0.0f, 0.0f );
+                    m_FadeImage.color = new Color(m_fFadeColour, m_fFadeColour, m_fFadeColour, 0.0f);
                     m_state = FadeEnum.eOff;
                 }
 
@@ -127,4 +141,11 @@ public class Fade : MonoBehaviour
         m_FadeEndTime = Time.time + m_FadeTime;
         m_state = FadeEnum.eFadingOff;
     }
+
+    public void FadeToWhite()
+    {
+        m_fFadeColour = 1.0f;
+        FadeOn();
+    }
+
 }

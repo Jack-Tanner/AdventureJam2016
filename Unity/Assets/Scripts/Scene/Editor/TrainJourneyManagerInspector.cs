@@ -38,6 +38,11 @@ public class TrainJourneyManagerInspector : Editor
                 }
             }
         }
+
+        if (GUILayout.Button("RESET"))
+        {
+            tM.ResetTrain();
+        }
         DrawDefaultInspector();
     }
 }

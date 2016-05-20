@@ -23,6 +23,11 @@ public class ConversationNode : MonoBehaviour
 
     public string m_setAnimation;
 
+    public AudioClip m_AudioToPlay;
+
+    public bool m_bDoTheSpookyThing = false;
+    public bool m_bFadeToWhite = false;
+
     public ConversationNode GetNext()
     {
         return GetBranchOption(0);
