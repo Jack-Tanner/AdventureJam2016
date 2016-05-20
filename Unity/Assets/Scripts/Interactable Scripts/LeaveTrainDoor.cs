@@ -3,6 +3,8 @@ using System.Collections;
 
 public class LeaveTrainDoor : Interactable
 {
+    public AudioSource DoorSound;
+
     public override void ThenDo()
     {
         Debug.Log( "Get off train." );
@@ -11,6 +13,8 @@ public class LeaveTrainDoor : Interactable
         {
             trainJourneyManager.GetOffTrain();
         }
+
+        DoorSound.Play();
     }
 
     public override bool Highlightable()

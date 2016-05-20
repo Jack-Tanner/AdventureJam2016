@@ -6,6 +6,8 @@ public class CarriageDoor : Interactable
     public Transform    m_OwningTrain;
     public CarriageDoor m_TransitionToDoor;
 
+    public AudioSource DoorSound;
+
     void Start()
     {
         if( m_OwningTrain == null )
@@ -27,6 +29,8 @@ public class CarriageDoor : Interactable
             Player.GetInstance().WalkToLocation( m_TransitionToDoor.GetWalkToLocation() );
 
             CameraController.GetInstance().MoveToPosition( m_TransitionToDoor.m_OwningTrain.transform.position );
+
+            DoorSound.Play();
         }
     }
 
