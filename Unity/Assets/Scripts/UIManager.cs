@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
 
     public AudioSource MapOpenSound;
     public AudioSource MapCloseSound;
+    public AudioSource RestartSound;
 
     private bool    m_MapShown = false;
 
@@ -122,6 +123,7 @@ public class UIManager : MonoBehaviour
         if (ConversationOverlord.GetInstance().DoneTalking())
         {
             TrainJourneyManager.GetInstance().ResetTrain();
+            RestartSound.Play();
         }
     }
 }

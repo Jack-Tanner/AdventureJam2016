@@ -440,7 +440,7 @@ public class TrainJourneyManager : MonoBehaviour
         if (isReset)
         {
             m_fTrainPosition = 0.0f;
-            GetComponent<AudioSource>().Play();
+//            GetComponent<AudioSource>().Play();
             m_fTrainSpeed = 0.0f;
             m_bTrainMoving = true;
         }
