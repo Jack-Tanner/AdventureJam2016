@@ -13,7 +13,7 @@ public class TrainJourneyManager : MonoBehaviour
     public float m_fTrainSpeed = 0.0f;
     public float m_fTrainMaxSpeed = 0.1f;
     public float m_fTrainAcceleration = 0.001f;
-    public bool m_bTrainMoving = false;
+    public bool m_bTrainMoving = true;
 
     public Camera m_Camera;
     public Vector3 m_CameraSpawnOffsetOnTrain;
@@ -372,6 +372,8 @@ public class TrainJourneyManager : MonoBehaviour
         {
             m_fTrainPosition = 0.0f;
             GetComponent<AudioSource>().Play();
+            m_fTrainSpeed = 0.0f;
+            m_bTrainMoving = true;
         }
 
 

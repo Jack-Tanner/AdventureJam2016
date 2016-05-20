@@ -106,7 +106,9 @@ public class UIManager : MonoBehaviour
     public void OnRestartPressed()
     {
         Debug.Log( "Restart Pressed." );
-
-        TrainJourneyManager.GetInstance().ResetTrain();
+        if (ConversationOverlord.GetInstance().DoneTalking())
+        {
+            TrainJourneyManager.GetInstance().ResetTrain();
+        }
     }
 }
