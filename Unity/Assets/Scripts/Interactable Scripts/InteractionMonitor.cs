@@ -31,7 +31,7 @@ public class InteractionMonitor : MonoBehaviour
         return m_Instance;
     }
 
-    void Start()
+    void Awake()
     {
         m_Instance = this;
         Cursor.SetCursor( cursorTexture, Vector2.zero, cursorMode );

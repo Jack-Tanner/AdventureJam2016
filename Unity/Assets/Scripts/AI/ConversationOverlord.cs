@@ -46,6 +46,8 @@ public class ConversationOverlord : MonoBehaviour
         {
             Debug.LogError( "No text attached to the Conversation Overloard." );
         }
+
+        TickConversation();
     }
 
     /// <summary>
