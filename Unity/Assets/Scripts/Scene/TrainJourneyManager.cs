@@ -37,6 +37,7 @@ public class TrainJourneyManager : MonoBehaviour
     public AudioSource LoopTrainAudio;
 
     public bool DontChangeLocation = false;
+    public AudioSource m_TrainCrash;
 
     //Force text to speak, no matter the conditions.
     //also lol hacky
@@ -316,6 +317,8 @@ public class TrainJourneyManager : MonoBehaviour
             ConversationOverlord.GetInstance().TickConversation();
 
             Bars.StartAll();
+
+            m_TrainCrash.Play();
         }
 
         if( m_bTrainCrashStarted )
