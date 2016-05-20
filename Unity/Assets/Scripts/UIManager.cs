@@ -79,7 +79,8 @@ public class UIManager : MonoBehaviour
         if( m_MapImage != null )
         {
             m_MapShown = !m_MapShown;
-            m_MapImage.color  = new Color( 1.0f, 1.0f, 1.0f, ( m_MapShown ? 1.0f : 0.0f ) );
+            //m_MapImage.color  = new Color( 1.0f, 1.0f, 1.0f, ( m_MapShown ? 1.0f : 0.0f ) );
+            m_MapImage.gameObject.SetActive( m_MapShown );
         }
     }
 
