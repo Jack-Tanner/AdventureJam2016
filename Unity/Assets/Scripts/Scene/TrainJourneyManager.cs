@@ -58,7 +58,7 @@ public class TrainJourneyManager : MonoBehaviour
         public SceneLocation location;
         public string scene;
         public int distance;
-        public bool othersideOfTrack = false;
+        public bool othersideOfTrack = true;
         public bool isDayTime = true;
         public bool isPuzzle = false;
     }
