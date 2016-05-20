@@ -8,6 +8,8 @@ public class Item : Interactable
     /// </summary>
     public string m_ItemName;
 
+    public AudioSource PickupSound;
+
     /// <summary>
     /// If true then this item will be shown in the inventory. Set to false for information items.
     /// </summary>
@@ -27,6 +29,8 @@ public class Item : Interactable
         // Hide the world object.
         gameObject.SetActive( false );
         Inventory.GetInstance().PickupItem( this );
+
+        PickupSound.Play();
     }
 
     /// <summary>
