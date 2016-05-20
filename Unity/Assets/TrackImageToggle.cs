@@ -53,11 +53,11 @@ public class TrackImageToggle : MonoBehaviour
             // other track is the bottom one.
             if( useOtherTrack )
             {
-                m_image.sprite = m_OffImage;
+                m_image.gameObject.SetActive( false );
             }
             else
             {
-                m_image.sprite = m_OnImage;
+                m_image.gameObject.SetActive( true );
             }
         }
         else
@@ -65,11 +65,11 @@ public class TrackImageToggle : MonoBehaviour
             // other track is the bottom one.
             if( useOtherTrack )
             {
-                m_image.sprite = m_OnImage;
+                m_image.gameObject.SetActive( true );
             }
             else
             {
-                m_image.sprite = m_OffImage;
+                m_image.gameObject.SetActive( false );
             }
         }
     }
