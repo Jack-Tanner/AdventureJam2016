@@ -348,6 +348,9 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void StartTrain()
     {
+        if (m_bIsOnTrain == false)
+            return;
+
         if (m_bTrainMoving == false)
             StartTrainAudio.Play();
         m_bTrainMoving = true;
