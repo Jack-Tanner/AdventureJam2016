@@ -22,6 +22,8 @@ public class Quest : MonoBehaviour
     /// </summary>
     public string m_QuestName;
 
+    public AudioSource QuestCompleteSound = null;
+
     // Use this for initialization
     void Start()
     {
@@ -42,6 +44,8 @@ public class Quest : MonoBehaviour
     {
         if( itemName == m_CompleteQuestItem )
         {
+            if (QuestCompleteSound != null)
+                QuestCompleteSound.Play();
             QuestManager.GetInstance().CompleteQuest( this );
             StartCoroutine( Fade() );
         }
