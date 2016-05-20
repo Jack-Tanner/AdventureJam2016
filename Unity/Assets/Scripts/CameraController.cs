@@ -42,6 +42,7 @@ public class CameraController : MonoBehaviour
     {
         m_MoveToLocation = location;
         m_MoveToLocation.z = transform.position.z;
+        m_MoveToLocation.y = transform.position.y;
         m_Move = true;
         m_MoveStartTime = Time.time;
     }
