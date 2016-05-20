@@ -31,7 +31,11 @@ public class TrainJourneyManager : MonoBehaviour
     public GameObject BridgeOverlay = null;
     public GameObject TunnelOverlay = null;
     public bool m_bStartedOutro = false;
-    
+
+    public AudioSource StartTrainAudio;
+    public AudioSource StopTrainAudio;
+    public AudioSource LoopTrainAudio;
+
     //Force text to speak, no matter the conditions.
     //also lol hacky
     public ConversationManager m_OutroConversation = null;
@@ -211,6 +215,43 @@ public class TrainJourneyManager : MonoBehaviour
         return m_bUseOtherTrack;
     }
 
+    public void UpdateLoopAudio()
+    {
+        if( m_bTrainMoving )
+        {
+            if( LoopTrainAudio.isPlaying )
+            {
+                if( LoopTrainAudio.volume < 1.0f )
+                {
+                    float newVolume = LoopTrainAudio.volume += (0.5f * Time.deltaTime);
+                    Mathf.Max(newVolume, 1.0f);
+                    LoopTrainAudio.volume = newVolume;
+                }
+            }
+            else
+            {
+                LoopTrainAudio.Play();
+                LoopTrainAudio.volume = 0.5f;
+            }
+        }
+        else
+        {
+            if (LoopTrainAudio.volume > 0.05f)
+            {
+                float newVolume = LoopTrainAudio.volume -= (0.5f * Time.deltaTime);
+                newVolume = Mathf.Clamp(newVolume, 0.0f, 1.0f);
+                LoopTrainAudio.volume = newVolume;
+            }
+            else
+            {
+                LoopTrainAudio.Stop();
+            }
+        }
+
+
+
+    }
+
     public void Update()
     {
         if (QuestManager.GetInstance() && QuestManager.GetInstance().GameIsComplete())
@@ -254,6 +295,7 @@ public class TrainJourneyManager : MonoBehaviour
         }
 
         UpdateOverlays();
+        UpdateLoopAudio();
 
         Train.SetBobAmount( m_fTrainSpeed );
         TrainDistanceText.Set( m_fTrainPosition.ToString("0.0") + " km" );
@@ -282,11 +324,15 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void StartTrain()
     {
+        if (m_bTrainMoving == false)
+            StartTrainAudio.Play();
         m_bTrainMoving = true;
     }
 
     public void StopTrain()
     {
+        if (m_bTrainMoving == true)
+            StopTrainAudio.Play();
         m_bTrainMoving = false;
     }
 
