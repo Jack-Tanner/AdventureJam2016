@@ -314,6 +314,8 @@ public class TrainJourneyManager : MonoBehaviour
             ConversationOverlord.GetInstance().current_conversation = null;
             ConversationOverlord.GetInstance().m_bDoneTalking = true;
             ConversationOverlord.GetInstance().TickConversation();
+
+            Bars.StartAll();
         }
 
         if( m_bTrainCrashStarted )
@@ -321,6 +323,7 @@ public class TrainJourneyManager : MonoBehaviour
             if( Fade.GetInstance().IsFading() == false )
             {
                 m_bTrainCrashStarted = false;
+                Bars.FadeAll();
             }
         }
     }
