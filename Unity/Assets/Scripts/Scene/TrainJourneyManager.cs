@@ -264,6 +264,7 @@ public class TrainJourneyManager : MonoBehaviour
         if (isReset)
         {
             m_fTrainPosition = 0.0f;
+            GetComponent<AudioSource>().Play();
         }
 
 
