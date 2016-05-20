@@ -130,6 +130,8 @@ public class Inventory : MonoBehaviour
                 break;
             }
         }
+
+        ArrangeUIItems();
     }
 
     /// <summary>
