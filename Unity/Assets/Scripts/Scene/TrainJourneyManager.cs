@@ -213,7 +213,7 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void Update()
     {
-        if (QuestManager.GetInstance().GameIsComplete())
+        if (QuestManager.GetInstance() && QuestManager.GetInstance().GameIsComplete())
         {
             if (m_bTrainMoving)
             {
