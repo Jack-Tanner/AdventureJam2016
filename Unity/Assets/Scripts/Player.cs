@@ -65,6 +65,9 @@ public class Player : SpeechPosition
     /// </summary>
     private SpriteRenderer m_SpriteRenderer = null;
 
+
+    public AudioClip m_DiggingAudio;
+
     void Start()
     {
         m_Instance = this;
@@ -137,5 +140,10 @@ public class Player : SpeechPosition
     {
         m_State = PlayerState.Ready;
         transform.position.Set( position, transform.position.y, transform.position.z );
+    }
+
+    public void PlayDigAudio()
+    {
+        GetComponent<AudioSource>().PlayOneShot(m_DiggingAudio);
     }
 }
