@@ -163,7 +163,15 @@ public class ConversationManager : MonoBehaviour
         {
             return;
         }
-        ConversationOverlord.GetInstance().SendText(c.m_Speaker.name + " : " + c.m_sSpeech, textPosition);
+
+        string prefix = "";
+        Interactable interactable = c.m_Speaker.GetComponent<Interactable>();
+        if (interactable != null)
+        {
+            prefix = interactable.m_HightlightName + " : ";
+        }
+
+        ConversationOverlord.GetInstance().SendText( prefix + c.m_sSpeech, textPosition);
     }
 
     public void ShowOptions()
