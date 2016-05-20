@@ -168,7 +168,7 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void GoToTrain(bool isReset = false)
     {
-        GoToLocationOnJourney("TrainScene", true, isResets);
+        GoToLocationOnJourney("TrainScene", true, isReset);
     }
 
     public void GetOffTrain()
