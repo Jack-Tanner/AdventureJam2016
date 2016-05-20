@@ -25,7 +25,7 @@ public class FadeOutAudio : MonoBehaviour {
             {
                 if (FadeOutSource.volume > 0.05f)
                 {
-                    float fNewVolume = FadeOutSource.volume - (0.05f * Time.deltaTime);
+                    float fNewVolume = FadeOutSource.volume - (0.5f * Time.deltaTime);
                     FadeOutSource.volume = fNewVolume;
                 }
                 else
