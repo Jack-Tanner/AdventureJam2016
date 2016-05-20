@@ -24,6 +24,9 @@ public class BackgroundManager : MonoBehaviour {
 
     public float StationarySkyMultiplier = 0.5f;
 
+    public Vector3 SunPosition = new Vector3(0.939f, -0.26f, 24.0f);
+    public Vector3 MoonPosition = new Vector3(0.823f, 0.697f, 24.0f);
+
 
     public bool NightTime = false;
 
@@ -93,7 +96,21 @@ public class BackgroundManager : MonoBehaviour {
             {
                 ScrollBackground();
             }
+
+            if (Sun != null)
+            {
+                if (journeyManager.IsDayTime())
+                {
+                    Sun.transform.position = SunPosition;
+                }
+                else
+                {
+                    Sun.transform.position = MoonPosition;
+                }
+            }
         }
+
+        
 
     }
 }
