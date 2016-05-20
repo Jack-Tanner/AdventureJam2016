@@ -93,6 +93,11 @@ public class ConversationManager : MonoBehaviour
                 Fade.GetInstance().OnFadeComplete += LoadOutroScene;
                 ConversationOverlord.GetInstance().SendText("", Vector3.one * 9001);//far too lazy to do this correctly
             }
+
+            if (m_CurrentConversationNode.m_AudioToPlay != null)
+            {
+                ConversationOverlord.GetInstance().m_AudioSourceSFX.PlayOneShot(m_CurrentConversationNode.m_AudioToPlay);
+            }
             
         }
 
