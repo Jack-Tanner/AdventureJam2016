@@ -30,7 +30,7 @@ public class Switch : Interactable
     /// </summary>
     public override void ThenDo()
     {
-        TrainJourneyManager.GetInstance().m_bUseOtherTrack = !TrainJourneyManager.GetInstance().m_bUseOtherTrack;
+        TrainJourneyManager.GetInstance().ChangeTrack( !TrainJourneyManager.GetInstance().m_bUseOtherTrack );
         UpdateSprite();
         GetComponent<AudioSource>().Play();
     }
