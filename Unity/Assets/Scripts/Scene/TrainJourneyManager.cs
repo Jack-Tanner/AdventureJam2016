@@ -116,14 +116,17 @@ public class TrainJourneyManager : MonoBehaviour
         //m_bUseOtherTrack = false;
         GoToTrain(true);
     }
-
-<<<<<<< HEAD
+    
     /// <summary>
     /// Called to change the track/route.
     /// </summary>
     /// <param name="bOtherTrack">should we use the other track.</param>
     public void ChangeTrack( bool bOtherTrack )
-=======
+    {
+        m_bUseOtherTrack = bOtherTrack;
+        OnTrackChanged( bOtherTrack );
+    }
+
     public void UpdateOverlays()
     {
         int distanceTraveled = Mathf.FloorToInt(m_fTrainPosition);
@@ -198,13 +201,6 @@ public class TrainJourneyManager : MonoBehaviour
         }
 
       
-    }
-
-    public void Update()
->>>>>>> origin/master
-    {
-        m_bUseOtherTrack = bOtherTrack;
-        OnTrackChanged( bOtherTrack );
     }
 
     /// <summary>
@@ -316,13 +312,8 @@ public class TrainJourneyManager : MonoBehaviour
             Debug.Log("TRAIN HAS NOT STOPPED");
             return;
         }
-<<<<<<< HEAD
         
-        int distanceTraveled = Mathf.RoundToInt(m_fTrainPosition);
-=======
-
         int distanceTraveled = Mathf.FloorToInt(m_fTrainPosition);
->>>>>>> origin/master
         TrainJourney tJ = GetTrainStop(distanceTraveled);
         GoToLocationOnJourney(tJ.scene, false);
     }
