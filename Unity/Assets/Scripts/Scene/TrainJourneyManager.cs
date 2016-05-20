@@ -264,7 +264,14 @@ public class TrainJourneyManager : MonoBehaviour
                 if (isTrainScene)
                 {
                     Player.GetInstance().transform.parent = m_TrainCarrage3.transform;
-                    m_Camera.transform.position = rootObjects[i].transform.position + m_CameraSpawnOffsetOnTrain;
+                    if (reset)
+                    {
+                        m_Camera.transform.position = new Vector3(0.0f,0.0f,-26.77f);
+                    }
+                    else
+                    {
+                        m_Camera.transform.position = new Vector3(-8.568f, 0.0f, -26.77f);
+                    }
                 }
                 else
                 { 
