@@ -94,12 +94,11 @@ public class TrainJourneyManager : MonoBehaviour
     }
 
 
-    public void ResetTrainPosition()
+    public void ResetTrain()
     {
         //reset use other track? or is that a puzzle
         //m_bUseOtherTrack = false;
-
-        m_fTrainPosition = 0.0f;
+        GoToTrain(true);
     }
 
     public void Update()
@@ -167,9 +166,9 @@ public class TrainJourneyManager : MonoBehaviour
         return m_bIsOnTrain;
     }
 
-    public void GoToTrain()
+    public void GoToTrain(bool isReset = false)
     {
-        GoToLocationOnJourney("TrainScene", true);
+        GoToLocationOnJourney("TrainScene", true, isResets);
     }
 
     public void GetOffTrain()
@@ -185,7 +184,7 @@ public class TrainJourneyManager : MonoBehaviour
         GoToLocationOnJourney(tJ.scene, false);
     }
 
-    private void GoToLocationOnJourney(string scene, bool isTrainScene)
+    private void GoToLocationOnJourney(string scene, bool isTrainScene, bool isReset = false)
     {
         if (m_AsyncSceneLoad != null)
         {
@@ -198,12 +197,12 @@ public class TrainJourneyManager : MonoBehaviour
             m_AsyncSceneLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
         }
 
-        StartCoroutine(DoTransition(scene, isTrainScene));
+        StartCoroutine(DoTransition(scene, isTrainScene, isReset));
 
     }
 
 
-    public IEnumerator DoTransition(string scene, bool isTrainScene)
+    public IEnumerator DoTransition(string scene, bool isTrainScene, bool isReset = false)
     {
 
         Fade.GetInstance().FadeOn();
@@ -232,7 +231,14 @@ public class TrainJourneyManager : MonoBehaviour
         {
             m_OnTransition();
         }
-        PositionPlayerInScene(s, isTrainScene);
+        PositionPlayerInScene(s, isTrainScene, isReset);
+
+
+        if (isReset)
+        {
+            m_fTrainPosition = 0.0f;
+        }
+
 
         Fade.GetInstance().FadeOff();
 
@@ -245,12 +251,14 @@ public class TrainJourneyManager : MonoBehaviour
     }
 
 
-    public void PositionPlayerInScene(Scene s, bool isTrainScene)
+    public void PositionPlayerInScene(Scene s, bool isTrainScene, bool reset)
     {
         GameObject[] rootObjects = s.GetRootGameObjects();
         for (int i = 0; i < rootObjects.Length; ++i)
         {
-            if (rootObjects[i].name == "SpawnPoint")
+
+            string placement = reset ? "StartingPos" : "SpawnPoint";
+            if (rootObjects[i].name == placement)
             {
 
                 if (isTrainScene)

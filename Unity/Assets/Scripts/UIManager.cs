@@ -89,5 +89,7 @@ public class UIManager : MonoBehaviour
     public void OnRestartPressed()
     {
         Debug.Log( "Restart Pressed." );
+
+        TrainJourneyManager.GetInstance().ResetTrain();
     }
 }
