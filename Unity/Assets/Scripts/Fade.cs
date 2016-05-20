@@ -97,6 +97,7 @@ public class Fade : MonoBehaviour
                 {
                     m_FadeImage.color = new Color(m_fFadeColour, m_fFadeColour, m_fFadeColour, 0.0f);
                     m_state = FadeEnum.eOff;
+                    m_fFadeColour = 0.0f;
                 }
 
                 break;
@@ -141,11 +142,13 @@ public class Fade : MonoBehaviour
         m_FadeEndTime = Time.time + m_FadeTime;
         m_state = FadeEnum.eFadingOff;
     }
-
+    public void SetFadeWhite()
+    {
+        m_fFadeColour = 1.0f;
+    }
     public void FadeToWhite()
     {
         m_fFadeColour = 1.0f;
         FadeOn();
     }
-
 }

@@ -83,7 +83,7 @@ public class TrainJourneyManager : MonoBehaviour
     private GameObject LastSpawnedOverlay = null;
     private TrainJourney.SceneLocation LastLocation = TrainJourney.SceneLocation.Station;
 
-
+    private bool m_bTrainCrashStarted = false;
     public void Awake()
     {
         m_instance = this;
@@ -303,6 +303,26 @@ public class TrainJourneyManager : MonoBehaviour
 
         Train.SetBobAmount( m_fTrainSpeed );
         TrainDistanceText.Set( m_fTrainPosition.ToString("0.0") + " km" );
+
+        ///             TRAIN CRASH
+        if( m_fTrainPosition > 30.0f && m_bTrainCrashStarted == false )
+        {
+            m_bTrainCrashStarted = true;
+            Fade.GetInstance().SetFadeWhite();
+            ResetTrain();
+
+            ConversationOverlord.GetInstance().current_conversation = null;
+            ConversationOverlord.GetInstance().m_bDoneTalking = true;
+            ConversationOverlord.GetInstance().TickConversation();
+        }
+
+        if( m_bTrainCrashStarted )
+        {
+            if( Fade.GetInstance().IsFading() == false )
+            {
+                m_bTrainCrashStarted = false;
+            }
+        }
     }
 
     private TrainJourney GetTrainStop(int position)
@@ -388,7 +408,6 @@ public class TrainJourneyManager : MonoBehaviour
 
     public IEnumerator DoTransition(string scene, bool isTrainScene, bool isReset = false)
     {
-
         Fade.GetInstance().FadeOn();
         while ((m_AsyncSceneLoad != null && m_AsyncSceneLoad.isDone == false) || Fade.GetInstance().IsFading())
         {
@@ -497,7 +516,10 @@ public class TrainJourneyManager : MonoBehaviour
 
         TrainJourney tJ = null;
         m_RouteAScenes.TryGetValue(distanceTraveled, out tJ);
-
+        if( tJ == null )
+        {
+            return true;
+        }
         return tJ.isDayTime;
     }
 

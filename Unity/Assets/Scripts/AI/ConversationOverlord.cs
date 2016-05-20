@@ -119,7 +119,7 @@ public class ConversationOverlord : MonoBehaviour
     }
 
 
-    private bool m_bDoneTalking = false;
+    public bool m_bDoneTalking = false;
 
     public void TickConversation()
     {
