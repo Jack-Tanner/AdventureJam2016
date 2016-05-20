@@ -241,7 +241,7 @@ public class TrainJourneyManager : MonoBehaviour
                 
             }
             m_fTrainSpeed = Mathf.Min(m_fTrainMaxSpeed, m_fTrainSpeed);
-            m_fTrainPosition += Time.deltaTime * m_fTrainSpeed;
+            m_fTrainPosition += Time.deltaTime * m_fTrainSpeed * 100.0f;
         }
         else
         {

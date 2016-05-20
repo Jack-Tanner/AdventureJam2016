@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class TrainCursorMap : MonoBehaviour
@@ -6,8 +7,9 @@ public class TrainCursorMap : MonoBehaviour
     /// <summary>
     /// The canvas this is rendered on.
     /// </summary>
-    public RectTransform m_CurrentCanvas = null;
-    
+    public RectTransform m_Start;
+    public RectTransform m_End;
+
     /// <summary>
     /// UI transform.
     /// </summary>
@@ -21,10 +23,9 @@ public class TrainCursorMap : MonoBehaviour
     void Update()
     {
         float currentPosition = TrainJourneyManager.GetInstance().m_fTrainPosition / 30.0f;
-        currentPosition -= 0.5f;
-        Debug.Log( m_CurrentCanvas.rect.width );
+        float pos  = Mathf.Lerp( m_Start.position.x, m_End.position.x, currentPosition );
         Vector3 newPos = m_transform.position;
-        newPos.x = currentPosition * m_CurrentCanvas.rect.width;
+        newPos.x = pos;
         m_transform.position = newPos;
     }
 }
