@@ -26,6 +26,11 @@ public class TrainJourneyManager : MonoBehaviour
     public delegate void OnTransition();
     public event OnTransition m_OnTransition;
 
+    public bool m_bStartedOutro = false;
+    
+    //Force text to speak, no matter the conditions.
+    //also lol hacky
+    public ConversationManager m_OutroConversation = null;
 
     [System.Serializable]
     public class TrainJourney
@@ -67,6 +72,7 @@ public class TrainJourneyManager : MonoBehaviour
         m_instance = this;
         m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
         m_TrainCarrage3 = GameObject.Find("Train 3");
+        m_bStartedOutro = false;
     }
 
     public static TrainJourneyManager GetInstance()
@@ -103,6 +109,27 @@ public class TrainJourneyManager : MonoBehaviour
 
     public void Update()
     {
+
+        if (QuestManager.GetInstance().GameIsComplete())
+        {
+            if (m_bTrainMoving)
+            {
+                StopTrain();
+            }
+            else
+            {
+                if( m_bStartedOutro == false)
+                {
+                    m_bStartedOutro = true;
+                    ConversationOverlord.GetInstance().current_conversation = m_OutroConversation;
+                    ConversationOverlord.GetInstance().TickConversation();
+                }
+            }
+
+
+        }
+
+
         if(m_bTrainMoving)
         {
             if(m_fTrainSpeed < m_fTrainMaxSpeed)

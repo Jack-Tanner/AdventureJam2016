@@ -7,6 +7,7 @@ using System.Collections.Generic;
 /// </summary>
 public class QuestManager : MonoBehaviour
 {
+
     /// <summary>
     /// All of the quests that this player has. Completed quests will be removed from this list.
     /// </summary>

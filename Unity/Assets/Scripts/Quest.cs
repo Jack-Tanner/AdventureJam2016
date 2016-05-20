@@ -66,7 +66,8 @@ public class Quest : MonoBehaviour
         }
 
         // Remove this object now.
-        Destroy( gameObject );
+       // Destroy( gameObject );
+        transform.position = new Vector3(9001.0f, 9001.0f, 9001.0f);
     }
 
 }
