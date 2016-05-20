@@ -16,6 +16,8 @@ public class ConversationOverlord : MonoBehaviour
 
     private int clickCounter = 1;
 
+    public float m_pauseInputTimer = 0.0f;
+
     public AudioSource m_AudioSourceSFX;
 
     /// <summary>
@@ -85,11 +87,28 @@ public class ConversationOverlord : MonoBehaviour
         }
     }
 
+    public void PauseInput(float time)
+    {
+        m_pauseInputTimer = time;
+    }
+
     public void Update()
     {
-        if(Input.GetMouseButtonUp(0))
+        if (m_pauseInputTimer > 0.0f)
         {
-            TickConversation();
+            m_pauseInputTimer -= Time.deltaTime;
+
+            if (m_pauseInputTimer <= 0.0f)
+            {
+                TickConversation();
+            }
+        }
+        else
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                TickConversation();
+            }
         }
     }
 

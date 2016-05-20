@@ -58,10 +58,12 @@ public class Quest : MonoBehaviour
 
         while( completeTime > Time.time )
         {
-            float delta = Mathf.Lerp( 0.0f, 1.0f, ( completeTime - Time.time )/fadeTime );
-            spriteRenderer.material.color = new Color( delta, delta, delta, delta );
-            transform.localScale = startScale * ( delta );
-
+            if (spriteRenderer != null)
+            {
+                float delta = Mathf.Lerp(0.0f, 1.0f, (completeTime - Time.time) / fadeTime);
+                spriteRenderer.material.color = new Color(delta, delta, delta, delta);
+                transform.localScale = startScale * (delta);
+            }
             yield return new WaitForEndOfFrame();
         }
 

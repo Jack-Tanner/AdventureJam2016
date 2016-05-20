@@ -98,7 +98,22 @@ public class ConversationManager : MonoBehaviour
             {
                 ConversationOverlord.GetInstance().m_AudioSourceSFX.PlayOneShot(m_CurrentConversationNode.m_AudioToPlay);
             }
-            
+
+            if (m_CurrentConversationNode.m_fPauseTime > 0.0f)
+            {
+                ConversationOverlord.GetInstance().PauseInput(m_CurrentConversationNode.m_fPauseTime);
+            }
+
+            if (m_CurrentConversationNode.m_bNotText)
+            {
+                ConversationOverlord.GetInstance().SendText("", Vector3.one * 9001);//far too lazy to do this correctly
+            }
+
+            if (m_CurrentConversationNode.m_destroyThis != null)
+            {
+                GameObject.Destroy(m_CurrentConversationNode.m_destroyThis);
+            }
+
         }
 
         ConversationNode newNode = m_CurrentConversationNode.GetNext();

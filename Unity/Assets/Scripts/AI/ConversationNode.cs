@@ -28,6 +28,12 @@ public class ConversationNode : MonoBehaviour
     public bool m_bDoTheSpookyThing = false;
     public bool m_bFadeToWhite = false;
 
+
+    public bool m_bNotText = false;
+    public float m_fPauseTime = 0.0f;
+    public GameObject m_destroyThis = null;
+
+
     public ConversationNode GetNext()
     {
         return GetBranchOption(0);
