@@ -222,7 +222,7 @@ public class TrainJourneyManager : MonoBehaviour
     {
         if( m_bTrainMoving )
         {
-            if( LoopTrainAudio.isPlaying )
+            if( LoopTrainAudio != null && LoopTrainAudio.isPlaying )
             {
                 if( LoopTrainAudio.volume < 1.0f )
                 {
@@ -233,13 +233,16 @@ public class TrainJourneyManager : MonoBehaviour
             }
             else
             {
-                LoopTrainAudio.Play();
-                LoopTrainAudio.volume = 0.5f;
+                if (LoopTrainAudio != null)
+                {
+                    LoopTrainAudio.Play();
+                    LoopTrainAudio.volume = 0.5f;
+                }
             }
         }
         else
         {
-            if (LoopTrainAudio.volume > 0.05f)
+            if (LoopTrainAudio != null && LoopTrainAudio.volume > 0.05f)
             {
                 float newVolume = LoopTrainAudio.volume -= (0.5f * Time.deltaTime);
                 newVolume = Mathf.Clamp(newVolume, 0.0f, 1.0f);
@@ -247,7 +250,8 @@ public class TrainJourneyManager : MonoBehaviour
             }
             else
             {
-                LoopTrainAudio.Stop();
+                if (LoopTrainAudio != null)
+                    LoopTrainAudio.Stop();
             }
         }
 

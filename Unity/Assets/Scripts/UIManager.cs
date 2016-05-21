@@ -29,13 +29,15 @@ public class UIManager : MonoBehaviour
         {
             if( trainJourneyManager.HasTrainStopped() )
             {
-                m_BreakButtonImage.sprite = m_StopTrainImage;
+                if(m_BreakButtonImage != null)
+                    m_BreakButtonImage.sprite = m_StopTrainImage;
 
                 trainJourneyManager.StartTrain();
             }
             else
             {
-                m_BreakButtonImage.sprite = m_StartTrainImage;
+                if (m_BreakButtonImage != null)
+                    m_BreakButtonImage.sprite = m_StartTrainImage;
 
                 trainJourneyManager.StopTrain();
             }
@@ -80,13 +82,15 @@ public class UIManager : MonoBehaviour
             {
                 if( trainJourneyManager.HasTrainStopped() )
                 {
-                    m_BreakButtonImage.sprite = m_StopTrainImage;
+                    if (m_BreakButtonImage != null)
+                        m_BreakButtonImage.sprite = m_StopTrainImage;
 
                     trainJourneyManager.StartTrain();
                 }
                 else
                 {
-                    m_BreakButtonImage.sprite = m_StartTrainImage;
+                    if (m_BreakButtonImage != null)
+                        m_BreakButtonImage.sprite = m_StartTrainImage;
 
                     trainJourneyManager.StopTrain();
                 }
