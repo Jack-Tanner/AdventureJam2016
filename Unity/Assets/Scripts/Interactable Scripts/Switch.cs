@@ -15,7 +15,7 @@ public class Switch : Interactable
 
     private void UpdateSprite()
     {
-        if (TrainJourneyManager.GetInstance().m_bUseOtherTrack == false)
+        if (TrainJourneyManager.GetInstance().GetIsUsingOtherTrack() == false)
         {
             m_SpriteRenderer.sprite = m_RouteA;
         }
@@ -30,7 +30,7 @@ public class Switch : Interactable
     /// </summary>
     public override void ThenDo()
     {
-        TrainJourneyManager.GetInstance().ChangeTrack( !TrainJourneyManager.GetInstance().m_bUseOtherTrack );
+        TrainJourneyManager.GetInstance().ChangeTrack( !TrainJourneyManager.GetInstance().GetIsUsingOtherTrack() );
         UpdateSprite();
         GetComponent<AudioSource>().Play();
     }

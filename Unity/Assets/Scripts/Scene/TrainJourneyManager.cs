@@ -9,7 +9,7 @@ public class TrainJourneyManager : MonoBehaviour
 
     public Scene currentlyLoadedScene;
     public float m_fTrainPosition = 0.0f;
-    public bool m_bUseOtherTrack = false;
+    private bool m_bUseOtherTrack = true;
     public float m_fTrainSpeed = 0.0f;
     public float m_fTrainMaxSpeed = 0.1f;
     public float m_fTrainAcceleration = 0.001f;
