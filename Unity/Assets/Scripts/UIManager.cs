@@ -76,17 +76,20 @@ public class UIManager : MonoBehaviour
         TrainJourneyManager trainJourneyManager = TrainJourneyManager.GetInstance();
         if( trainJourneyManager != null )
         {
-            if( trainJourneyManager.HasTrainStopped() )
+            if( trainJourneyManager.IsOnTrain() )
             {
-                m_BreakButtonImage.sprite = m_StopTrainImage;
+                if( trainJourneyManager.HasTrainStopped() )
+                {
+                    m_BreakButtonImage.sprite = m_StopTrainImage;
 
-                trainJourneyManager.StartTrain();
-            }
-            else
-            {
-                m_BreakButtonImage.sprite = m_StartTrainImage;
+                    trainJourneyManager.StartTrain();
+                }
+                else
+                {
+                    m_BreakButtonImage.sprite = m_StartTrainImage;
 
-                trainJourneyManager.StopTrain();
+                    trainJourneyManager.StopTrain();
+                }
             }
         }
     }
