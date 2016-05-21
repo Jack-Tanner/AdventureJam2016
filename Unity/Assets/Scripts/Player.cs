@@ -146,4 +146,9 @@ public class Player : SpeechPosition
     {
         GetComponent<AudioSource>().PlayOneShot(m_DiggingAudio);
     }
+
+    public void StopWalk()
+    {
+        m_State = PlayerState.Ready;
+    }
 }

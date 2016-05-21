@@ -35,6 +35,8 @@ public class Fade : MonoBehaviour
         m_FadeImage = gameObject.GetComponent<Image>();
         m_fFadeColour = 0.0f;
         OnFadeComplete = null;
+
+        FadeOff();
     }
 
     /// <summary>

@@ -47,6 +47,13 @@ public class InteractionMonitor : MonoBehaviour
     /// </summary>
     void Update()
     {
+        if( TrainJourneyManager.GetInstance().m_fTrainPosition > 30.0f )
+        {
+            // Don't continue to interact.
+            Player.GetInstance().StopWalk();
+            return;
+        }
+
         // Check that the player is able to click on things in the world.
         if (UIManager.GetInstance().InputAllowed() && ConversationOverlord.GetInstance().DoneTalking () )
         {
