@@ -34,12 +34,12 @@ public class InteractionMonitor : MonoBehaviour
     void Awake()
     {
         m_Instance = this;
-        Cursor.SetCursor( cursorTexture, Vector2.zero, cursorMode );
+        //Cursor.SetCursor( cursorTexture, Vector2.zero, cursorMode );
     }
 
     void OnDestroy()
     {
-        Cursor.SetCursor( null, Vector2.zero, cursorMode );
+        //Cursor.SetCursor( null, Vector2.zero, cursorMode );
     }
 
     /// <summary>
