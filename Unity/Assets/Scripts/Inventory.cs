@@ -75,6 +75,9 @@ public class Inventory : MonoBehaviour
 
         m_OnItemCollected( item.m_ItemName );
 
+        if (item.PickupSound != null)
+            item.PickupSound.Play();
+
         ArrangeUIItems();
     }
 
