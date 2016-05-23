@@ -28,12 +28,6 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public List<GameObject> m_UIItems;
 
-    /// <summary>
-    /// Template for items in the UI.
-    /// </summary>
-    public GameObject m_ExampleUIItem;
-
-
     public delegate void OnItemCollected( string item );
     /// <summary>
     /// Called when an item is collected.
@@ -51,7 +45,6 @@ public class Inventory : MonoBehaviour
 
     void Start()
     {
-        m_ExampleUIItem.SetActive( false );
         ArrangeUIItems();
     }
     /// <summary>
