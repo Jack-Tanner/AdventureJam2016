@@ -460,7 +460,7 @@ public class TrainJourneyManager : MonoBehaviour
 
 
         Fade.GetInstance().FadeOff();
-
+		Player.GetInstance().StopWalk();
         while (Fade.GetInstance().IsFading())
         {
             yield return null;
